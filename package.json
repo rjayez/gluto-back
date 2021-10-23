@@ -1,0 +1,22 @@
+{
+  "name": "gluto-back",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Back node server pour le projet Gluto",
+  "scripts": {
+    "start": "node ./express/bin/www",
+    "dev" : "nodemon ./express/bin/www"
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
+    "jade": "~1.11.0",
+    "morgan": "~1.9.1",
+    "tmi.js": "~1.8.5"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.14"
+  }
+}
