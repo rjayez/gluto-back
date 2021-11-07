@@ -5,15 +5,22 @@
   "description": "Back node server pour le projet Gluto",
   "scripts": {
     "start": "node ./express/bin/www",
-    "dev" : "nodemon ./express/bin/www"
+    "dev": "nodemon ./express/bin/www  --inspect --trace-warnings",
+    "tunnel": "lt -p 5000 -s letetryl"
   },
   "dependencies": {
+    "axios": "0.24.0",
     "cookie-parser": "~1.4.4",
+    "cors": "^2.8.5",
     "debug": "~2.6.9",
+    "dotenv": "^10.0.0",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
+    "js-sha256": "^0.9.0",
+    "localtunnel": "^2.0.2",
     "morgan": "~1.9.1",
+    "socket.io": "^4.3.1",
     "tmi.js": "~1.8.5"
   },
   "devDependencies": {
