@@ -6,7 +6,6 @@ let logger = require('morgan');
 let bot = require('./bot/bot');
 
 let indexRouter = require('./routes/index');
-let usersRouter = require('./routes/users');
 let twitchRouter = require('./routes/twitch')
 
 let app = express();

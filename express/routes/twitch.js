@@ -17,6 +17,7 @@ const MESSAGE_POINTS = [
     "%s, tu aimes dépenser des points de chaine pour rien."
 ]
 
+const MESSAGE_TYPE_VERIFICATION = 'webhook_callback_verification_pending';
 
 const corsOptions = {
     origin: "http://localhost:3000"
@@ -31,35 +32,37 @@ router.get('/notif', (req, res, next) => {
 router.post('/notif', (req, res, next) => {
 
     // Vérifie que le message provient bien de Twitch avec le bon secret
-    if(!verifyTwitchSubSignature(req.headers, req.body)){
+    if (!verifyTwitchSubSignature(req.headers, req.body)) {
         console.log("Rejeté");
-        res.sendStatus(403);
-        return;
+        return res.sendStatus(403);
+    }
+    console.log("BODY", req.body);
+    const randomMessage = getRandomInt(MESSAGE_POINTS.length);
+
+    // Vérification d'une subscription d'event twitch
+    if (req.body?.subscription?.status === MESSAGE_TYPE_VERIFICATION) {
+        // Notification message types
+        console.log("Verification pending")
+        return res.status(200).send(req.body.challenge);
     }
 
-    const randomMessage = getRandomInt(MESSAGE_POINTS.length);
-    if(req.body?.subscription?.status === 'webhook_callback_verification_pending'){
-        console.log("verification pending")
-            res.sendStatus(204);
-    } else if(req.body?.subscription?.status === 'enabled') {
+    if (req.body?.subscription?.status === 'enabled') {
         const event = req.body.event;
         console.log("Notif reçu !", event)
-        io.emit("notif", { pseudo : req.body.event.user_name});
+        io.emit("notif", {pseudo: req.body.event.user_name});
         client.say("letetryl", MESSAGE_POINTS[randomMessage].replace("%s", event.user_name));
-        res.sendStatus(204);
+        return res.sendStatus(204);
     }
-
-
 })
 
-router.get('/schedule', cors(corsOptions),function (req, res) {
+router.get('/schedule', cors(corsOptions), function (req, res) {
     const leTetrylId = 438950402;
-        getWeekSchedule(leTetrylId)
-            .then(data => res.send(data));
+    getWeekSchedule(leTetrylId)
+        .then(data => res.send(data));
 })
 
 function verifyTwitchSubSignature(headers, body) {
-    // TODO finaliser la verification
+
     const HMAC_PREFIX = "sha256=";
     const messageId = headers["twitch-eventsub-message-id"];
     const messageTimestamp = headers["twitch-eventsub-message-timestamp"];
