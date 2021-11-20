@@ -65,6 +65,19 @@ client.on('message', async (channel, tags, message, self) => {
         await client.say(channel, `Nique toi ${tags?.["display-name"]} !`);
     }
 
+    if(message.toLowerCase() === '!frites'){
+        await client.say(channel, `C'est l'heure des frites !`);
+    }
+
+    if(message.toLowerCase() === '!joue'){
+        await client.say(channel, `Tais-toi et joue !`);
+    }
+
+    if(message.toLowerCase() === '!digestif'){
+        await client.say(channel, `Je vous conseille la Menthe Pastille, c'est fait par un pharmacien !`);
+    }
+
+
 });
 
 module.exports = client;

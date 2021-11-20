@@ -11,8 +11,8 @@ function getRandomInt(max) {
 }
 
 const MESSAGE_POINTS = [
-    `Ah ! T'aimes jouer avec ce point de chaine %s !`,
-    "`Arrête de jouer %s !",
+    "Ah ! T'aimes jouer avec ce point de chaine %s !",
+    "Arrête de jouer %s !",
     "T'as vu %s, ça fait rien ;)",
     "%s, tu aimes dépenser des points de chaine pour rien."
 ]
