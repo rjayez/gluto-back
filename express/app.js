@@ -4,6 +4,7 @@ let path = require('path');
 let cookieParser = require('cookie-parser');
 let logger = require('morgan');
 let bot = require('./bot/bot');
+let helmet = require('helmet');
 
 let indexRouter = require('./routes/index');
 let twitchRouter = require('./routes/twitch')
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(helmet());
 
 app.use('/', indexRouter);
 app.use('/twitch', twitchRouter);
