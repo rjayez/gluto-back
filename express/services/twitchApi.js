@@ -68,8 +68,7 @@ function mapSchedule(stream) {
         fin: stream?.end_time,
         jeu: stream?.category.name,
         estPassee : new Date(stream?.end_time) < new Date(),
-        image_jeu_url: gamePictureCache[stream?.category?.id],
-
+        image_jeu_url: gamePictureCache[stream?.category?.id]
     }
 }
 
@@ -82,4 +81,15 @@ function getMonday(d) {
 
 getMonday(new Date());
 
-module.exports = {getWeekSchedule};
+function getStreamPresent(id){
+
+    const url = `${BASE_URL}/streams?user_id=${id}`
+    return axios.get(url, {headers: HEADERS})
+        .then((response) => {
+            return {
+                isLive : response.data?.length > 0
+            }
+        })
+}
+
+module.exports = {getWeekSchedule, getStreamPresent};

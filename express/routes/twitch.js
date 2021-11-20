@@ -3,8 +3,10 @@ let router = express.Router();
 const client = require('../bot/bot')
 const {io} = require('../services/socket')
 const {sha256} = require("js-sha256")
-const {getWeekSchedule} = require('../services/twitchApi');
+const {getWeekSchedule, getStreamPresent} = require('../services/twitchApi');
 const cors = require('cors');
+
+const LE_TETRYL_ID = 438950402;
 
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
@@ -56,8 +58,13 @@ router.post('/notif', (req, res, next) => {
 })
 
 router.get('/schedule', cors(corsOptions), function (req, res) {
-    const leTetrylId = 438950402;
-    getWeekSchedule(leTetrylId)
+
+   return getWeekSchedule(LE_TETRYL_ID)
+        .then(data => res.send(data));
+})
+
+router.get('/stream', cors(corsOptions), function(req, res){
+    return getStreamPresent(LE_TETRYL_ID)
         .then(data => res.send(data));
 })
 
