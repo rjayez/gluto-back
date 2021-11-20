@@ -36,7 +36,7 @@ router.post('/notif', (req, res, next) => {
         console.log("Rejeté");
         return res.sendStatus(403);
     }
-    console.log("BODY", req.body);
+    // console.log("BODY", req.body);
     const randomMessage = getRandomInt(MESSAGE_POINTS.length);
 
     // Vérification d'une subscription d'event twitch
@@ -48,7 +48,7 @@ router.post('/notif', (req, res, next) => {
 
     if (req.body?.subscription?.status === 'enabled') {
         const event = req.body.event;
-        console.log("Notif reçu !", event)
+        console.log("Notif reçu !")
         io.emit("notif", {pseudo: req.body.event.user_name});
         client.say("letetryl", MESSAGE_POINTS[randomMessage].replace("%s", event.user_name));
         return res.sendStatus(204);
