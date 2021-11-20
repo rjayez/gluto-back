@@ -67,6 +67,7 @@ function mapSchedule(stream) {
         debut: stream?.start_time,
         fin: stream?.end_time,
         jeu: stream?.category.name,
+        estPassee : new Date(stream?.end_time) < new Date(),
         image_jeu_url: gamePictureCache[stream?.category?.id],
 
     }
