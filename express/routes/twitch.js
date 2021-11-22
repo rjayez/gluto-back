@@ -24,7 +24,7 @@ const MESSAGE_POINTS = [
 const MESSAGE_TYPE_VERIFICATION = 'webhook_callback_verification_pending';
 
 const corsOptions = {
-    origin: ["http://localhost:3000","https://gluto-back.herokuapp.com"]
+    origin: ["http://localhost:3000","https://gluto-site.netlify.app"]
 }
 
 router.get('/notif', (req, res, next) => {
