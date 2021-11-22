@@ -38,6 +38,7 @@ function getWeekSchedule(id) {
                     return segments
                         .flatMap(segment => mapSchedule(segment))
                         .filter(seg => new Date(seg.debut) < nextMonday)
+                        .filter(seg => !seg.estAnnule)
                 })
         });
 
@@ -62,12 +63,13 @@ function getGamePicture(gameId) {
 }
 
 function mapSchedule(stream) {
-    // const image_jeu_url = await getGamePicture(stream?.category?.id)
+
     return {
         debut: stream?.start_time,
         fin: stream?.end_time,
         jeu: stream?.category.name,
         estPassee : new Date(stream?.end_time) < new Date(),
+        estAnnule : stream?.canceled_until !== null,
         image_jeu_url: gamePictureCache[stream?.category?.id]
     }
 }
