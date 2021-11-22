@@ -12,6 +12,8 @@ function getRandomInt(max) {
     return Math.floor(Math.random() * max);
 }
 
+const TEST_REWARD_ID = "0a111137-52d4-405e-a510-70731abf8fcc";
+
 const MESSAGE_POINTS = [
     "Ah ! T'aimes jouer avec ce point de chaine %s !",
     "Arrête de jouer %s !",
@@ -22,7 +24,7 @@ const MESSAGE_POINTS = [
 const MESSAGE_TYPE_VERIFICATION = 'webhook_callback_verification_pending';
 
 const corsOptions = {
-    origin: "http://localhost:3000"
+    origin: ["http://localhost:3000","https://gluto-back.herokuapp.com"]
 }
 
 router.get('/notif', (req, res, next) => {
@@ -38,7 +40,7 @@ router.post('/notif', (req, res, next) => {
         console.log("Rejeté");
         return res.sendStatus(403);
     }
-    // console.log("BODY", req.body);
+    console.log("BODY", req.body);
     const randomMessage = getRandomInt(MESSAGE_POINTS.length);
 
     // Vérification d'une subscription d'event twitch
@@ -52,7 +54,9 @@ router.post('/notif', (req, res, next) => {
         const event = req.body.event;
         console.log("Notif reçu !")
         io.emit("notif", {pseudo: req.body.event.user_name});
-        client.say("letetryl", MESSAGE_POINTS[randomMessage].replace("%s", event.user_name));
+        if(TEST_REWARD_ID === event?.reward?.id){
+            client.say("letetryl", MESSAGE_POINTS[randomMessage].replace("%s", event.user_name));
+        }
         return res.sendStatus(204);
     }
 })

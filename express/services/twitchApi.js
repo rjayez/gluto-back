@@ -87,7 +87,7 @@ function getStreamPresent(id){
     return axios.get(url, {headers: HEADERS})
         .then((response) => {
             return {
-                isLive : response.data?.length > 0
+                isLive : response.data?.data?.length > 0
             }
         })
 }
