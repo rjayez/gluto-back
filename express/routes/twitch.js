@@ -54,7 +54,7 @@ router.post('/notif', (req, res, next) => {
         const event = req.body.event;
         console.log("Notif reçu !")
         io.emit("notif", {pseudo: req.body.event.user_name});
-        if(TEST_REWARD_ID === event?.reward?.id){
+        if(process.env.NODE_ENV === 'production' && TEST_REWARD_ID === event?.reward?.id){
             client.say("letetryl", MESSAGE_POINTS[randomMessage].replace("%s", event.user_name));
         }
         return res.sendStatus(204);

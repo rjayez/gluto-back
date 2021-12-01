@@ -1,5 +1,6 @@
 const axios = require('axios');
 const {response} = require("express");
+const {DateTime} = require("luxon");
 require('dotenv').config();
 
 const BASE_URL = "https://api.twitch.tv/helix";
@@ -15,17 +16,11 @@ const OFFSET = 60 // 1 heure pour UTC+1
 function getWeekSchedule(id) {
 
     const nbElement = 7;
-    const monday = getMonday(new Date().setHours(1, 0, 0));
+    const monday = DateTime.now().startOf('week');
 
-    console.log(monday.toISOString());
-    const nextMonday = new Date();
-    nextMonday.setHours(1, 0, 0);
-    nextMonday.setDate(monday.getDate() + 7);
-    console.log(nextMonday.toISOString());
+    const nextMonday = monday.plus({days: 7})
 
-
-    const url = `${BASE_URL}/schedule?broadcaster_id=${id}&utc_offset=${OFFSET}&first=${nbElement}&start_time=${monday.toISOString()}`
-    console.log(url);
+    const url = `${BASE_URL}/schedule?broadcaster_id=${id}&utc_offset=${OFFSET}&first=${nbElement}&start_time=${monday.toUTC()}`
     return axios.get(url, {headers: HEADERS})
         .then(response => {
 
@@ -37,13 +32,13 @@ function getWeekSchedule(id) {
                 .then(() => {
                     return segments
                         .flatMap(segment => mapSchedule(segment))
-                        .filter(seg => new Date(seg.debut) < nextMonday)
+                        // Filtre pour garder uniquement les streams de la semaine en cours
+                        .filter(seg => DateTime.fromISO(seg.debut) < nextMonday)
+                        // Filtre si jamais un stream est annulé en cours de semaine
                         .filter(seg => !seg.estAnnule)
                 })
         });
-
 }
-
 
 function getGamePicture(gameId) {
 
@@ -68,20 +63,11 @@ function mapSchedule(stream) {
         debut: stream?.start_time,
         fin: stream?.end_time,
         jeu: stream?.category.name,
-        estPassee : new Date(stream?.end_time) < new Date(),
+        estPassee : DateTime.fromISO(stream?.end_time) < DateTime.now(),
         estAnnule : stream?.canceled_until !== null,
         image_jeu_url: gamePictureCache[stream?.category?.id]
     }
 }
-
-function getMonday(d) {
-    d = new Date(d);
-    let day = d.getDay(),
-        diff = d.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
-    return new Date(d.setDate(diff));
-}
-
-getMonday(new Date());
 
 function getStreamPresent(id){
 
