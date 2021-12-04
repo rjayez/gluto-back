@@ -21,7 +21,8 @@ const MESSAGE_POINTS = [
     "%s, tu aimes dépenser des points de chaine pour rien.",
     "Oh, t'as appris à utiliser les points de chaine, bravo le veau",
     "Tiens, ton chat joue sur le clavier ?",
-    "Chérie, les viewers jouent avec les points de chaine"
+    "Chérie, les viewers jouent avec les points de chaine",
+    "Ok, vu."
 ]
 
 const MESSAGE_TYPE_VERIFICATION = 'webhook_callback_verification_pending';
