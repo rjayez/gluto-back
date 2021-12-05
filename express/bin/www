@@ -33,7 +33,7 @@ server.on('listening', onListening);
 
 
 // Launch socket.io server
-socketServer.listen(5050);
+// socketServer.listen(5050);
 
 /**
  * Normalize a port into a number, string, or false.
