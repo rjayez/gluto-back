@@ -26,6 +26,8 @@
     "tmi.js": "~1.8.5"
   },
   "devDependencies": {
-    "nodemon": "^2.0.14"
+    "nodemon": "^2.0.14",
+    "prettier": "~2.5.1",
+    "eslint": "~8.4.0"
   }
 }
