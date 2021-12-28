@@ -1,12 +1,11 @@
-let express = require("express");
-let router = express.Router();
+const express = require("express");
+const router = express.Router();
 const client = require("../bot/bot");
 const { io } = require("../services/socket");
 const { sha256 } = require("js-sha256");
 const { getWeekSchedule, getStreamPresent } = require("../services/twitchApi");
 const cors = require("cors");
-
-const LE_TETRYL_ID = 438950402;
+const { LE_TETRYL_ID, CORS_OPTIONS } = require("../constants/index");
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);

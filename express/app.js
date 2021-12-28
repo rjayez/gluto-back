@@ -5,9 +5,12 @@ let cookieParser = require("cookie-parser");
 let logger = require("morgan");
 let bot = require("./bot/bot");
 let helmet = require("helmet");
+const cors = require("cors");
+const { CORS_OPTIONS } = require("./constants");
 
 let indexRouter = require("./routes/index");
 let twitchRouter = require("./routes/twitch");
+let cardsRouter = require("./routes/cards");
 
 let app = express();
 
@@ -22,16 +25,18 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(helmet());
 
+app.use(cors(CORS_OPTIONS));
 app.use("/", indexRouter);
 app.use("/twitch", twitchRouter);
+app.use("/cards", cardsRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
@@ -42,7 +47,6 @@ app.use(function(err, req, res, next) {
 });
 
 // start twitch bot
-bot.connect()
-  .catch(console.error);
+bot.connect().catch(console.error);
 
 module.exports = app;
