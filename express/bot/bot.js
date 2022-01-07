@@ -20,6 +20,20 @@ client.on("message", async (channel, context, message) => {
   // });
 });
 
+// QI entre -100 et 250
+function getQI() {
+  return Math.floor(Math.random() * 351 - 100);
+}
+
+// AGE entre 0 et 120.
+function getAge() {
+  const age = Math.floor(Math.random() * 121);
+  if (age === 1 || age === 0) {
+    return `${age} an.`;
+  }
+  return `${age} ans.`;
+}
+
 client.on("message", async (channel, tags, message, self) => {
   if (message.toLowerCase() === "!test") {
     console.log("tags", tags);
@@ -75,6 +89,14 @@ client.on("message", async (channel, tags, message, self) => {
 
   if (message.toLowerCase() === "!idiot") {
     await client.say(channel, "Tyé fada !");
+  }
+
+  if (message.toLowerCase() === "!qi") {
+    await client.say(channel, `${tags?.["display-name"]}, tu as un QI de ${getQI()} !`);
+  }
+
+  if (message.toLowerCase() === "!age") {
+    await client.say(channel, `${tags?.["display-name"]}, tu as ${getAge()}`);
   }
 });
 
