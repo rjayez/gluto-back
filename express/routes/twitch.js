@@ -28,7 +28,7 @@ const MESSAGE_POINTS = [
 const MESSAGE_TYPE_VERIFICATION = "webhook_callback_verification_pending";
 
 const corsOptions = {
-  origin: ["http://localhost:3000", "https://gluto-site.netlify.app"],
+  origin: ["http://localhost:3000", "https://gluto-site.netlify.app", "https://tetryl.stream"],
 };
 
 router.get("/notif", (req, res, next) => {
@@ -38,7 +38,6 @@ router.get("/notif", (req, res, next) => {
 });
 
 router.post("/notif", (req, res, next) => {
-
   // Vérifie que le message provient bien de Twitch avec le bon secret
   if (!verifyTwitchSubSignature(req.headers, req.body)) {
     console.log("Rejeté");
@@ -65,19 +64,15 @@ router.post("/notif", (req, res, next) => {
   }
 });
 
-router.get("/schedule", cors(corsOptions), function(req, res) {
-
-  return getWeekSchedule(LE_TETRYL_ID)
-    .then(data => res.send(data));
+router.get("/schedule", cors(corsOptions), function (req, res) {
+  return getWeekSchedule(LE_TETRYL_ID).then(data => res.send(data));
 });
 
-router.get("/stream", cors(corsOptions), function(req, res) {
-  return getStreamPresent(LE_TETRYL_ID)
-    .then(data => res.send(data));
+router.get("/stream", cors(corsOptions), function (req, res) {
+  return getStreamPresent(LE_TETRYL_ID).then(data => res.send(data));
 });
 
 function verifyTwitchSubSignature(headers, body) {
-
   const HMAC_PREFIX = "sha256=";
   const messageId = headers["twitch-eventsub-message-id"];
   const messageTimestamp = headers["twitch-eventsub-message-timestamp"];
@@ -88,7 +83,6 @@ function verifyTwitchSubSignature(headers, body) {
   const hmacMessage = HMAC_PREFIX + sha256.hmac(process.env.TWITCH_EVENTSUB_SECRET, message);
 
   return hmacMessage === signature;
-
 }
 
 module.exports = router;
