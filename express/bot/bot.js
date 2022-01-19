@@ -20,6 +20,16 @@ client.on("message", async (channel, context, message) => {
   // });
 });
 
+/**
+ * Random inclusive
+ * @param start
+ * @param end
+ * @returns {number}
+ */
+function getRandomNumber(start, end) {
+  return Math.floor(Math.random() * (end - start + 1) + start);
+}
+
 // QI entre -100 et 250
 function getQI() {
   return Math.floor(Math.random() * 351 - 100);
@@ -34,7 +44,41 @@ function getAge() {
   return `${age} ans.`;
 }
 
+const listCmd = [
+  "!bot",
+  "!cri",
+  "!dé",
+  "!chaise",
+  "!banc",
+  "!debile",
+  "!romanusdodo",
+  "!zireael",
+  "!romanus",
+  "!nik",
+  "!frites",
+  "!joue",
+  "!digestif",
+  "!idiot",
+  "!qi",
+  "!age",
+  "!bisou",
+];
+
 client.on("message", async (channel, tags, message, self) => {
+  if (["!cmd", "!commande", "!commandes"].includes(message.toLowerCase())) {
+    // await client
+    //   .whisper("letetryl", "Pour votre plus grands plaisirs, voici la liste des commandes : " + listCmd.join(", "))
+    //   .catch(err => console.error(err));
+
+    await client
+      .say(channel, "Pour votre plus grands plaisirs, voici la liste des commandes : " + listCmd.join(", "))
+      .catch(err => console.error(err));
+  }
+
+  if (["!dé", "!dés", "!dé6"].includes(message.toLowerCase())) {
+    await client.say(channel, `Je lance un dé et... ${getRandomNumber(1, 6)} !`).catch(err => console.error(err));
+  }
+
   if (message.toLowerCase() === "!test") {
     console.log("tags", tags);
   }
