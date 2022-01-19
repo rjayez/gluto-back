@@ -98,6 +98,10 @@ client.on("message", async (channel, tags, message, self) => {
   if (message.toLowerCase() === "!age") {
     await client.say(channel, `${tags?.["display-name"]}, tu as ${getAge()}`);
   }
+
+  if (message.toLowerCase() === "!bisou" || message.toLowerCase() === "!bisous") {
+    await client.say(channel, "<3 ❤️ 🧡 💛 💚 💙 💜 🤎 🖤 🤍 ❤️ <3 🧡 💛 💚 💙 💜 🤎 🖤 🤍 <3");
+  }
 });
 
 module.exports = client;
