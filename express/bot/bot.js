@@ -146,6 +146,13 @@ client.on("message", async (channel, tags, message, self) => {
   if (message.toLowerCase() === "!bisou" || message.toLowerCase() === "!bisous") {
     await client.say(channel, "<3 ❤️ 🧡 💛 💚 💙 💜 🤎 🖤 🤍 ❤️ <3 🧡 💛 💚 💙 💜 🤎 🖤 🤍 <3");
   }
+
+  if (["!danse", "!dance"].includes(message.toLowerCase())) {
+    await client.say(
+      channel,
+      "letetrDanse letetrDanse letetrDanse letetrDanse letetrDanse letetrDanse letetrDanse letetrDanse letetrDanse letetrDanse"
+    );
+  }
 });
 
 module.exports = client;
