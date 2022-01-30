@@ -26,6 +26,7 @@ function getWeekSchedule(id) {
     const dayObject = {
       jour: day,
       date: nextDay.toUTC(60),
+      estPassee: nextDay < DateTime.now().startOf("day"),
     };
     nextDay = nextDay.plus({ days: 1 });
     return dayObject;
@@ -81,7 +82,6 @@ function mapSchedule(stream) {
     fin: stream?.end_time,
     jeu: stream?.category.name,
     titre: stream?.title,
-    estPassee: DateTime.fromISO(stream?.end_time) < DateTime.now(),
     estAnnule: stream?.canceled_until !== null,
     imageJeuUrl: gamePictureCache[stream?.category?.id],
   };
