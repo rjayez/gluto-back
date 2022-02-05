@@ -38,11 +38,11 @@ function getWeekSchedule(id) {
     const gameIds = [...new Set(segments.map(stream => stream.category.id))];
 
     // Récupére les images des jeux des streams
-    return Promise.all(gameIds.map(getGamePicture))
+    return Promise.all(gameIds.map(this.getGamePicture))
       .then(() => {
         return (
           segments
-            .flatMap(segment => mapSchedule(segment))
+            .flatMap(segment => this.mapSchedule(segment))
             // Filtre pour garder uniquement les streams de la semaine en cours
             .filter(seg => DateTime.fromISO(seg.debut) < nextMonday)
             // Filtre si jamais un stream est annulé en cours de semaine
@@ -60,39 +60,6 @@ function getWeekSchedule(id) {
           };
         });
       });
-  });
-}
-
-function getGamePicture(gameId) {
-  if (gamePictureCache[gameId]) {
-    return Promise.resolve(gamePictureCache[gameId]);
-  }
-
-  const url = `${BASE_URL}/games?id=${gameId}`;
-  return axios.get(url, { headers: HEADERS }).then(res => {
-    let boxArtUrl = res.data?.data[0]?.box_art_url || "";
-    gamePictureCache[gameId] = boxArtUrl;
-    return boxArtUrl;
-  });
-}
-
-function mapSchedule(stream) {
-  return {
-    debut: stream?.start_time,
-    fin: stream?.end_time,
-    jeu: stream?.category.name,
-    titre: stream?.title,
-    estAnnule: stream?.canceled_until !== null,
-    imageJeuUrl: gamePictureCache[stream?.category?.id],
-  };
-}
-
-function getStreamPresent(id) {
-  const url = `${BASE_URL}/streams?user_id=${id}`;
-  return axios.get(url, { headers: HEADERS }).then(response => {
-    return {
-      isLive: response.data?.data?.length > 0,
-    };
   });
 }
 
