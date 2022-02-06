@@ -147,6 +147,10 @@ client.on("message", async (channel, tags, message, self) => {
     await client.say(channel, "<3 ❤️ 🧡 💛 💚 💙 💜 🤎 🖤 🤍 ❤️ <3 🧡 💛 💚 💙 💜 🤎 🖤 🤍 <3");
   }
 
+  if (message.toLowerCase() === "!site") {
+    await client.say(channel, "Le site flamboyant : https://tetryl.stream");
+  }
+
   if (["!danse", "!dance"].includes(message.toLowerCase())) {
     await client.say(
       channel,
