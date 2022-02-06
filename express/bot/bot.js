@@ -64,6 +64,10 @@ const listCmd = [
   "!bisou",
 ];
 
+client.on("follow", async (channel, tags, message, self) => {
+  await client.say(channel, "letetrBienvenue letetrBienvenue letetrBienvenue letetrBienvenue");
+});
+
 client.on("message", async (channel, tags, message, self) => {
   if (["!cmd", "!commande", "!commandes"].includes(message.toLowerCase())) {
     // await client
