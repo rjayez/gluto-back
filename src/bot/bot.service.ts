@@ -27,7 +27,7 @@ export class BotService implements OnModuleInit {
 
   constructor(@Inject("CHAT_CLIENT") private chatClient: ChatClient) {}
 
-  async postMessage(msg: string) {
+  async postMessage(msg: string): Promise<void> {
     await this.chatClient.say("#letetryl", msg).catch(err => console.error(err));
   }
 

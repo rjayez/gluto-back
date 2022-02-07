@@ -7,7 +7,7 @@ import { ConfigModule } from "@nestjs/config";
 import { BotModule } from "./bot/bot.module";
 
 @Module({
-  imports: [CardsModule, TwitchModule, BotModule, ConfigModule.forRoot({ envFilePath: ".env" })],
+  imports: [ConfigModule.forRoot({ envFilePath: ".env" }), CardsModule, TwitchModule, BotModule],
   controllers: [AppController],
   providers: [AppService],
 })
