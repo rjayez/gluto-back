@@ -36,7 +36,7 @@ export class TwitchService {
     }&first=${nbElement}&start_time=${monday.toUTC()}`;
 
     return axios.get(url, { headers: this.HEADERS }).then(response => {
-      const segments = response.data.data.segments;
+      const segments = response.data.data.segments || [];
       const gameIds = [...new Set<string>(segments.map(stream => stream.category.id))];
 
       // Récupére les images des jeux des streams
