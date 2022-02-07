@@ -41,6 +41,10 @@ export class BotService implements OnModuleInit {
           .catch(err => console.error(err));
       }
 
+      if (message.toLowerCase() === "!site") {
+        await this.chatClient.say(channel, "Le site flamboyant : 🔥 https://tetryl.stream 🔥");
+      }
+
       if (["!dé", "!dés", "!dé6"].includes(message.toLowerCase())) {
         await this.chatClient
           .say(channel, `Je lance un dé et... ${getRandomNumber(1, 6)} !`)
