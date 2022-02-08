@@ -13,7 +13,7 @@ export class BotService implements OnModuleInit {
     "!dé",
     "!chaise",
     "!banc",
-    "!debile",
+    "!fada",
     "!romanusdodo",
     "!zireael",
     "!romanus",
@@ -39,9 +39,6 @@ export class BotService implements OnModuleInit {
   async onModuleInit(): Promise<any> {
     await this.chatClient.connect();
     this.chatClient.onMessage(async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
-      console.log({ channel, user, message, msg });
-      console.log(msg);
-
       if (["!cmd", "!commande", "!commandes"].includes(message.toLowerCase())) {
         await this.chatClient.whisper("Romanus89", "test!!!!").catch(err => console.error(err));
 
@@ -79,7 +76,7 @@ export class BotService implements OnModuleInit {
         await this.chatClient.say(channel, "C'EST UN BANC, BORDEL !");
       }
 
-      if (message.toLowerCase() === "!debile") {
+      if (message.toLowerCase() === "!fada") {
         await this.chatClient.say(channel, "Tetryl, tyé fada, couillon !");
       }
 

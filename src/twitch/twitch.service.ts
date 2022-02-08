@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import axios from "axios";
 import { DateTime } from "luxon";
 import { StreamDto } from "./dto/stream.dto";
+import { sha256 } from "js-sha256";
 
 @Injectable()
 export class TwitchService {
@@ -100,5 +101,18 @@ export class TwitchService {
         isLive: response.data?.data?.length > 0,
       };
     });
+  }
+
+  verifyTwitchSubSignature(headers, body): boolean {
+    const HMAC_PREFIX = "sha256=";
+    const messageId = headers["twitch-eventsub-message-id"];
+    const messageTimestamp = headers["twitch-eventsub-message-timestamp"];
+    const signature = headers["twitch-eventsub-message-signature"];
+    const message = messageId + messageTimestamp + JSON.stringify(body);
+
+    //get Hmac
+    const hmacMessage = HMAC_PREFIX + sha256.hmac(process.env.TWITCH_EVENTSUB_SECRET, message);
+
+    return hmacMessage === signature;
   }
 }
