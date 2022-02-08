@@ -3,13 +3,10 @@ import { DatabaseService } from "./database.service";
 import { DatabaseController } from "./database.controller";
 import { MongooseModule } from "@nestjs/mongoose";
 import { config } from "dotenv";
+import { ConfigModule } from "@nestjs/config";
 
 @Module({
-  imports: [
-    MongooseModule.forRoot(
-      `mongodb+srv://${process.env.MONGODB_LOGIN}:${process.env.MONGODB_PWD}@cluster0.jvbmq.mongodb.net/glutoDB`
-    ),
-  ],
+  imports: [ConfigModule.forRoot({ envFilePath: ".env" })],
   controllers: [DatabaseController],
   providers: [DatabaseService],
 })

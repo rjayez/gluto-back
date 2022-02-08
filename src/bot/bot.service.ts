@@ -2,13 +2,18 @@ import { Inject, Injectable, OnModuleInit } from "@nestjs/common";
 import { ChatClient } from "@twurple/chat";
 import { TwitchPrivateMessage } from "@twurple/chat/lib/commands/TwitchPrivateMessage";
 import { getAge, getQI, getRandomNumber } from "./utils";
+import { ConnectionAdapter, DirectConnectionAdapter, EnvPortAdapter, EventSubListener } from "@twurple/eventsub";
+import { ApiClient } from "@twurple/api";
+import { LE_TETRYL_ID } from "../constants";
 
 @Injectable()
 export class BotService implements OnModuleInit {
+  private listener: EventSubListener;
   private readonly listCmd = [
     "!bot",
     "!cri",
     "!dé",
+    "!site",
     "!chaise",
     "!banc",
     "!fada",
@@ -25,13 +30,34 @@ export class BotService implements OnModuleInit {
     "!bisou",
   ];
 
-  constructor(@Inject("CHAT_CLIENT") private chatClient: ChatClient) {}
+    constructor(@Inject("CHAT_CLIENT") private chatClient: ChatClient) {
+    const staticAuthProvider = this.authService.getStaticAuthProvider();
+    this.chatClient = new ChatClient({ authProvider: staticAuthProvider, channels: ["letetryl", "romanus89"] });
+    const apiClient = new ApiClient({ authProvider: this.authService.getClientCredentialsAuthProvider() });
+    const adapter: ConnectionAdapter = new EnvPortAdapter({
+      hostName: "localhost:5000",
+    });
+    this.listener = new EventSubListener({ apiClient, adapter: adapter, secret: process.env.TWITCH_EVENTSUB_SECRET });
+  }
+ {}
 
   async postMessage(msg: string): Promise<void> {
     await this.chatClient.say("#letetryl", msg).catch(err => console.error(err));
   }
 
-  async onModuleInit(): Promise<any> {
+  async onModuleInit(): Promise<void> {
+    await this.chatClient.connect();
+
+    await this.chatClient.say("#letetryl", "Je me réveille zzzZZZ");
+
+    this.listener.subscribeToChannelFollowEvents(LE_TETRYL_ID, event => {
+      this.chatClient.say("#letetryl", "C'est le follow ! letetrBienvenue letetrBienvenue ");
+    });
+
+    this.chatClient.onSub(async (channel, user) => {
+      await this.chatClient.say(channel, "Test sub event");
+    });
+
     this.chatClient.onMessage(async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
       if (["!cmd", "!commande", "!commandes"].includes(message.toLowerCase())) {
         await this.chatClient.whisper("Romanus89", "test!!!!").catch(err => console.error(err));
