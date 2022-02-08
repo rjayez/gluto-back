@@ -124,6 +124,14 @@ export class BotService implements OnModuleInit {
         await this.chatClient.say(channel, "<3 ❤️ 🧡 💛 💚 💙 💜 🤎 🖤 🤍 ❤️ <3 🧡 💛 💚 💙 💜 🤎 🖤 🤍 <3");
       }
 
+      if (message.toLowerCase() === "!site") {
+        await this.chatClient.say(channel, "Le site flamboyant : 🔥 https://tetryl.stream 🔥");
+      }
+
+      if (message.toLowerCase() === "!planning") {
+        await this.chatClient.say(channel, "Retrouvez le ici => https://tetryl.stream/planning ");
+      }
+
       if (["!danse", "!dance"].includes(message.toLowerCase())) {
         await this.chatClient.say(
           channel,
