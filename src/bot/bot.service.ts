@@ -139,5 +139,9 @@ export class BotService implements OnModuleInit {
         );
       }
     });
+
+    this.chatClient.onSub(async (channel, user, subInfo, msg) => {
+      await this.chatClient.say(channel, `letetrAAAH letetrAAAH Merci ${user} pour le sub letetrAAAH letetrAAAH`);
+    });
   }
 }
