@@ -1,12 +1,10 @@
-import { Injectable, OnModuleInit } from "@nestjs/common";
+import { Inject, Injectable, OnModuleInit } from "@nestjs/common";
 import { ChatClient } from "@twurple/chat";
 import { TwitchPrivateMessage } from "@twurple/chat/lib/commands/TwitchPrivateMessage";
-import { AuthService } from "../auth/auth.service";
 import { getAge, getQI, getRandomNumber } from "./utils";
 
 @Injectable()
 export class BotService implements OnModuleInit {
-  private chatClient;
   private readonly listCmd = [
     "!bot",
     "!cri",
@@ -27,17 +25,13 @@ export class BotService implements OnModuleInit {
     "!bisou",
   ];
 
-  constructor(private authService: AuthService) {
-    const staticAuthProvider = this.authService.getStaticAuthProvider();
-    this.chatClient = new ChatClient({ authProvider: staticAuthProvider, channels: ["letetryl"] });
-  }
+  constructor(@Inject("CHAT_CLIENT") private chatClient: ChatClient) {}
 
   async postMessage(msg: string) {
     await this.chatClient.say("#letetryl", msg).catch(err => console.error(err));
   }
 
   async onModuleInit(): Promise<any> {
-    await this.chatClient.connect();
     this.chatClient.onMessage(async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
       if (["!cmd", "!commande", "!commandes"].includes(message.toLowerCase())) {
         await this.chatClient.whisper("Romanus89", "test!!!!").catch(err => console.error(err));
