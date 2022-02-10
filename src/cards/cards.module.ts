@@ -1,10 +1,18 @@
 import { Module } from "@nestjs/common";
 import { CardsController } from "./cards.controller";
 import { CardsService } from "./cards.service";
-import { DatabaseModule } from "../database/database.module";
+import { MongooseModule } from "@nestjs/mongoose";
+import { Card, CardSchema } from "./schema/card.schema";
+import { RarityModule } from "../rarity/rarity.module";
+import { Rarity, RaritySchema } from "../rarity/schema/rarity.schema";
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [
+    MongooseModule.forFeature([
+      { name: Card.name, schema: CardSchema },
+      { name: Rarity.name, schema: RaritySchema },
+    ]),
+  ],
   controllers: [CardsController],
   providers: [CardsService],
 })

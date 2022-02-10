@@ -11,6 +11,7 @@ import { SeriesController } from "./series/series.controller";
 import { SeriesService } from "./series/series.service";
 import { RarityModule } from "./rarity/rarity.module";
 import { MongooseModule } from "@nestjs/mongoose";
+import { SeriesModule } from "./series/series.module";
 
 @Module({
   imports: [
@@ -24,8 +25,9 @@ import { MongooseModule } from "@nestjs/mongoose";
     CategoriesModule,
     SubcategoriesModule,
     RarityModule,
+    SeriesModule,
   ],
-  controllers: [AppController, SeriesController],
-  providers: [AppService, SeriesService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

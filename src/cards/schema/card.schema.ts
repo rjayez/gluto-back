@@ -1,5 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document } from "mongoose";
+import { Rarity, RaritySchema } from "../../rarity/schema/rarity.schema";
+import * as mongoose from "mongoose";
 
 export type CardDocument = Card & Document;
 
@@ -15,10 +17,13 @@ export class Card {
   subtitle: string;
 
   @Prop()
-  descriptio: string;
+  description: string;
 
   @Prop()
-  idPicture: string;
+  pictureUrl: string;
+
+  @Prop({ type: RaritySchema })
+  rarity: Rarity;
 }
 
 export const CardSchema = SchemaFactory.createForClass(Card);

@@ -1,9 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { RarityService } from './rarity.service';
-import { CreateRarityDto } from './dto/create-rarity.dto';
-import { UpdateRarityDto } from './dto/update-rarity.dto';
+import { Controller, Get, Post, Body, Patch, Param, Delete } from "@nestjs/common";
+import { RarityService } from "./rarity.service";
+import { CreateRarityDto } from "./dto/create-rarity.dto";
+import { UpdateRarityDto } from "./dto/update-rarity.dto";
 
-@Controller('rarity')
+@Controller("rarities")
 export class RarityController {
   constructor(private readonly rarityService: RarityService) {}
 
@@ -17,18 +17,18 @@ export class RarityController {
     return this.rarityService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
+  @Get(":id")
+  findOne(@Param("id") id: string) {
     return this.rarityService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRarityDto: UpdateRarityDto) {
+  @Patch(":id")
+  update(@Param("id") id: string, @Body() updateRarityDto: UpdateRarityDto) {
     return this.rarityService.update(+id, updateRarityDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  @Delete(":id")
+  remove(@Param("id") id: string) {
     return this.rarityService.remove(+id);
   }
 }

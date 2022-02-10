@@ -3,7 +3,7 @@ import { Document } from "mongoose";
 
 export type RarityDocument = Rarity & Document;
 
-@Schema()
+@Schema({ discriminatorKey: "name" })
 export class Rarity {
   @Prop()
   name: string;
