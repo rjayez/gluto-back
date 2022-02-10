@@ -1,6 +1,5 @@
 import { Module } from "@nestjs/common";
-import { AuthService } from "./auth.service";
-import { StaticAuthProvider } from "@twurple/auth";
+import { ClientCredentialsAuthProvider, StaticAuthProvider } from "@twurple/auth";
 
 const staticAuthProviderFactory = {
   provide: "STATIC_AUTH_PROVIDER",
@@ -11,10 +10,18 @@ const staticAuthProviderFactory = {
   },
 };
 
+const clientCredentialsAuthProviderFactory = {
+  provide: "CLIENT_CREDENTIALS_PROVIDER",
+  useFactory: () => {
+    const clientId = process.env.CLIENT_ID;
+    const clientSecret = process.env.CLIENT_SECRET;
+    return new ClientCredentialsAuthProvider(clientId, clientSecret);
+  },
+};
+
 @Module({
   imports: [],
-  controllers: [],
-  providers: [AuthService, staticAuthProviderFactory],
-  exports: ["STATIC_AUTH_PROVIDER"],
+  providers: [staticAuthProviderFactory, clientCredentialsAuthProviderFactory],
+  exports: ["STATIC_AUTH_PROVIDER", "CLIENT_CREDENTIALS_PROVIDER"],
 })
 export class AuthModule {}

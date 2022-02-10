@@ -2,9 +2,10 @@ import { Inject, Injectable, OnModuleInit } from "@nestjs/common";
 import { ChatClient } from "@twurple/chat";
 import { TwitchPrivateMessage } from "@twurple/chat/lib/commands/TwitchPrivateMessage";
 import { getAge, getQI, getRandomNumber } from "./utils";
-import { ConnectionAdapter, DirectConnectionAdapter, EnvPortAdapter, EventSubListener } from "@twurple/eventsub";
+import { ConnectionAdapter, EnvPortAdapter, EventSubListener } from "@twurple/eventsub";
 import { ApiClient } from "@twurple/api";
 import { LE_TETRYL_ID } from "../constants";
+import { ClientCredentialsAuthProvider } from "@twurple/auth";
 
 @Injectable()
 export class BotService implements OnModuleInit {
@@ -30,24 +31,22 @@ export class BotService implements OnModuleInit {
     "!bisou",
   ];
 
-    constructor(@Inject("CHAT_CLIENT") private chatClient: ChatClient) {
-    const staticAuthProvider = this.authService.getStaticAuthProvider();
-    this.chatClient = new ChatClient({ authProvider: staticAuthProvider, channels: ["letetryl", "romanus89"] });
-    const apiClient = new ApiClient({ authProvider: this.authService.getClientCredentialsAuthProvider() });
+  constructor(
+    @Inject("CHAT_CLIENT") private chatClient: ChatClient,
+    @Inject("CLIENT_CREDENTIALS_PROVIDER") private clientCredentialsAuthProvider: ClientCredentialsAuthProvider
+  ) {
+    const apiClient = new ApiClient({ authProvider: this.clientCredentialsAuthProvider });
     const adapter: ConnectionAdapter = new EnvPortAdapter({
       hostName: "localhost:5000",
     });
     this.listener = new EventSubListener({ apiClient, adapter: adapter, secret: process.env.TWITCH_EVENTSUB_SECRET });
   }
- {}
 
   async postMessage(msg: string): Promise<void> {
     await this.chatClient.say("#letetryl", msg).catch(err => console.error(err));
   }
 
   async onModuleInit(): Promise<void> {
-    await this.chatClient.connect();
-
     await this.chatClient.say("#letetryl", "Je me réveille zzzZZZ");
 
     this.listener.subscribeToChannelFollowEvents(LE_TETRYL_ID, event => {

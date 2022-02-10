@@ -1,11 +1,11 @@
 import { Module } from "@nestjs/common";
 import { TwitchController } from "./twitch.controller";
 import { TwitchService } from "./twitch.service";
-import { AuthService } from "../auth/auth.service";
+import { ChatClientModule } from "../bot/chat-client.module";
 
 @Module({
-  imports: [],
+  imports: [ChatClientModule],
   controllers: [TwitchController],
-  providers: [TwitchService, AuthService],
+  providers: [TwitchService],
 })
 export class TwitchModule {}

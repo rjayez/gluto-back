@@ -1,9 +1,8 @@
-import { Controller, ForbiddenException, Get, HttpStatus, OnModuleInit, Post, Req } from "@nestjs/common";
+import { Controller, ForbiddenException, Get, HttpStatus, Inject, Post, Req } from "@nestjs/common";
 import { TwitchService } from "./twitch.service";
 import { StreamDto } from "./dto/stream.dto";
 import { LE_TETRYL_ID } from "../constants";
 import { ChatClient } from "@twurple/chat";
-import { AuthService } from "../auth/auth.service";
 
 const MESSAGE_POINTS = [
   "Ah ! T'aimes jouer avec ce point de chaine %s !",
@@ -21,17 +20,11 @@ const TEST_REWARD_ID = "0a111137-52d4-405e-a510-70731abf8fcc";
 const MESSAGE_TYPE_VERIFICATION = "webhook_callback_verification_pending";
 
 @Controller("/twitch")
-export class TwitchController implements OnModuleInit {
-  chatClient: ChatClient;
-
-  constructor(private readonly twitchService: TwitchService, private readonly authService: AuthService) {
-    const staticAuthProvider = this.authService.getStaticAuthProvider();
-    this.chatClient = new ChatClient({ authProvider: staticAuthProvider, channels: ["letetryl", "romanus89"] });
-  }
-
-  async onModuleInit() {
-    await this.chatClient.connect();
-  }
+export class TwitchController {
+  constructor(
+    private readonly twitchService: TwitchService,
+    @Inject("CHAT_CLIENT") private readonly chatClient: ChatClient
+  ) {}
 
   @Get("/schedule")
   getWeekSchedule(): StreamDto[] {
