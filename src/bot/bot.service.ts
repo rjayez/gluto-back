@@ -47,6 +47,8 @@ export class BotService implements OnModuleInit {
   }
 
   async onModuleInit(): Promise<void> {
+    // pour éviter les doubles messages en live
+    return;
     await this.chatClient.say("#letetryl", "Je me réveille zzzZZZ");
 
     this.listener.subscribeToChannelFollowEvents(LE_TETRYL_ID, event => {
@@ -121,6 +123,10 @@ export class BotService implements OnModuleInit {
 
       if (message.toLowerCase() === "!frites") {
         await this.chatClient.say(channel, `C'est l'heure des frites !`);
+      }
+
+      if (message.toLowerCase() === "!kebab") {
+        await this.chatClient.say(channel, `C'est l'heure du kebab ! (sauce samouraî)`);
       }
 
       if (message.toLowerCase() === "!joue") {

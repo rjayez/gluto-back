@@ -1,7 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document } from "mongoose";
 import { Rarity, RaritySchema } from "../../rarity/schema/rarity.schema";
-import * as mongoose from "mongoose";
 
 export type CardDocument = Card & Document;
 

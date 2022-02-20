@@ -1,7 +1,6 @@
-import { Body, Controller, Get, Post } from "@nestjs/common";
+import { Body, Controller, Post } from "@nestjs/common";
 import { CardsService } from "./cards.service";
 import { UploadDto } from "./dto/upload.dto";
-import { CreateRarityDto } from "../rarity/dto/create-rarity.dto";
 import { CreateCardDto } from "./dto/create-card.dto";
 
 @Controller("/cards")

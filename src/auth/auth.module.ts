@@ -1,5 +1,10 @@
 import { Module } from "@nestjs/common";
 import { ClientCredentialsAuthProvider, StaticAuthProvider } from "@twurple/auth";
+import { AuthController } from "./auth.controller";
+import { TwitchStrategy } from "./twitch.strategy";
+import { PassportModule } from "@nestjs/passport";
+import { UsersModule } from "../users/users.module";
+import { AuthService } from "./auth.service";
 
 const staticAuthProviderFactory = {
   provide: "STATIC_AUTH_PROVIDER",
@@ -20,8 +25,9 @@ const clientCredentialsAuthProviderFactory = {
 };
 
 @Module({
-  imports: [],
-  providers: [staticAuthProviderFactory, clientCredentialsAuthProviderFactory],
+  imports: [PassportModule.register({}), UsersModule],
+  providers: [TwitchStrategy, staticAuthProviderFactory, clientCredentialsAuthProviderFactory, AuthService],
   exports: ["STATIC_AUTH_PROVIDER", "CLIENT_CREDENTIALS_PROVIDER"],
+  controllers: [AuthController],
 })
 export class AuthModule {}

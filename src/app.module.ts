@@ -1,17 +1,17 @@
-import { Module } from "@nestjs/common";
+import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { CardsModule } from "./cards/cards.module";
 import { TwitchModule } from "./twitch/twitch.module";
 import { ConfigModule } from "@nestjs/config";
-import { BotModule } from "./bot/bot.module";
 import { CategoriesModule } from "./categories/categories.module";
 import { SubcategoriesModule } from "./subcategories/subcategories.module";
-import { SeriesController } from "./series/series.controller";
-import { SeriesService } from "./series/series.service";
 import { RarityModule } from "./rarity/rarity.module";
 import { MongooseModule } from "@nestjs/mongoose";
 import { SeriesModule } from "./series/series.module";
+import { AuthModule } from "./auth/auth.module";
+import { BotModule } from "./bot/bot.module";
+import { LoggerMiddleware } from "./logger.middleware";
 
 @Module({
   imports: [
@@ -26,8 +26,13 @@ import { SeriesModule } from "./series/series.module";
     SubcategoriesModule,
     RarityModule,
     SeriesModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): any {
+    consumer.apply(LoggerMiddleware).forRoutes("*");
+  }
+}

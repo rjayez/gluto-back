@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
 import { RarityService } from "./rarity.service";
 import { CreateRarityDto } from "./dto/create-rarity.dto";
 import { UpdateRarityDto } from "./dto/update-rarity.dto";
