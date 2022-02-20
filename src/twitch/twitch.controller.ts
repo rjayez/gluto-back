@@ -4,6 +4,7 @@ import { StreamDto } from "./dto/stream.dto";
 import { LE_TETRYL_ID } from "../constants";
 import { ChatClient } from "@twurple/chat";
 import { AuthService } from "../auth/auth.service";
+import { getRandomNumber } from "../utils/utils";
 
 const MESSAGE_POINTS = [
   "Ah ! T'aimes jouer avec ce point de chaine %s !",
@@ -47,6 +48,7 @@ export class TwitchController implements OnModuleInit {
   emitNotif() {}
 
   //TODO Déplacer dans un autre controller
+
   @Post("/notif")
   async validTwitchSubscription(@Req() req) {
     // Vérifie que le message provient bien de Twitch avec le bon secret
@@ -55,7 +57,7 @@ export class TwitchController implements OnModuleInit {
       throw new ForbiddenException();
     }
     console.log("BODY", req.body);
-    const randomMessage = TwitchController.getRandomInt(MESSAGE_POINTS.length);
+    const randomMessage = getRandomNumber(0, MESSAGE_POINTS.length);
 
     // Vérification d'une subscription d'event twitch
     if (req.body?.subscription?.status === MESSAGE_TYPE_VERIFICATION) {
@@ -67,17 +69,7 @@ export class TwitchController implements OnModuleInit {
     let subscription = req.body.subscription;
     if (subscription.status === "enabled") {
       let event = req.body.event;
-      console.log();
-      if (subscription.type === "channel.follow") {
-        console.info("subscription", subscription);
-        if (event.broadcaster_user_login === "romanus89") {
-          await this.chatClient.say("#romanus89", `Test de letetrBienvenue ${event.user_name}`);
-        }
 
-        if (event.broadcaster_user_name === "letetryl") {
-          await this.chatClient.say("#letetryl", `letetrBienvenue letetrBienvenue letetrBienvenue ${event.user_name}`);
-        }
-      }
       console.log("Notif reçu !!!");
       // io.emit("notif", { pseudo: req.body.event.user_name });
       if (
@@ -87,13 +79,7 @@ export class TwitchController implements OnModuleInit {
         await this.chatClient.say("letetryl", MESSAGE_POINTS[randomMessage].replace("%s", event.user_name));
       }
 
-      // Channel.follow sub id a3834156-9e9b-4c3c-8779-ace0f1a13818
-
       return HttpStatus.NO_CONTENT;
     }
-  }
-
-  private static getRandomInt(max) {
-    return Math.floor(Math.random() * max);
   }
 }

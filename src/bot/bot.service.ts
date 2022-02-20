@@ -1,7 +1,7 @@
 import { Inject, Injectable, OnModuleInit } from "@nestjs/common";
 import { ChatClient } from "@twurple/chat";
 import { TwitchPrivateMessage } from "@twurple/chat/lib/commands/TwitchPrivateMessage";
-import { getAge, getQI, getRandomNumber } from "./utils";
+import { getAge, getQI, getRandomNumber } from "../utils/utils";
 
 @Injectable()
 export class BotService implements OnModuleInit {
