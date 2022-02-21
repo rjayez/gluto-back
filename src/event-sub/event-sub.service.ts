@@ -1,9 +1,13 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { sha256 } from "js-sha256";
 import { ChatClient } from "@twurple/chat";
+import { DateTime } from "luxon";
+import { TWO_MINUTES_IN_SECONDES } from "./constants";
 
 @Injectable()
 export class EventSubService {
+  private readonly ANTI_SPAM_CHAT_CLIENT = {};
+
   constructor(@Inject("CHAT_CLIENT") private readonly chatClient: ChatClient) {}
 
   verifyTwitchSubSignature(headers, body): boolean {
@@ -19,10 +23,30 @@ export class EventSubService {
     return hmacMessage === signature;
   }
 
+  /**
+   * Vérifie si quelqu'un lance la même commande
+   * @param username username de la personne à vérifier
+   * @param type type ou nom de la commande, sert de clé pour le dictionnaire
+   * return {boolean} return true if message can be send
+   */
+  controlAntiSpam(username, type): boolean {
+    console.info("ASCC", this.ANTI_SPAM_CHAT_CLIENT);
+    const eventTimeCmd = this.ANTI_SPAM_CHAT_CLIENT[username + type];
+    if (eventTimeCmd) {
+      this.ANTI_SPAM_CHAT_CLIENT[username + type] = DateTime.now();
+      return DateTime.now() > eventTimeCmd.plus({ seconds: TWO_MINUTES_IN_SECONDES });
+    } else {
+      this.ANTI_SPAM_CHAT_CLIENT[username + type] = DateTime.now();
+      return true;
+    }
+  }
+
   async eventChannelFollow(event: any) {
+    if (!this.controlAntiSpam(event.user_name, "channel.follow")) return;
+
     await this.chatClient.say(
       "#letetryl",
-      `letetrBienvenue Bienvenue à toi @${event?.user_name} ! Merci pour ton follow ! Tu rejoins notre petit groupe d'aventuriers ! letetrBienvenue`
+      `letetrBienvenue Bienvenue à toi @${event.user_name} ! Merci pour ton follow ! Tu rejoins notre petit groupe d'aventuriers ! letetrBienvenue`
     );
 
     // TODO Rajouter total follow

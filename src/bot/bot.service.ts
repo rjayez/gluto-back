@@ -33,6 +33,10 @@ export class BotService implements OnModuleInit {
 
   async onModuleInit(): Promise<any> {
     this.chatClient.onMessage(async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
+      if (process.env.EN_DEV) {
+        return;
+      }
+
       if (["!cmd", "!commande", "!commandes"].includes(message.toLowerCase())) {
         await this.chatClient.whisper("Romanus89", "test!!!!").catch(err => console.error(err));
 
