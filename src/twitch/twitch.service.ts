@@ -102,17 +102,4 @@ export class TwitchService {
       };
     });
   }
-
-  verifyTwitchSubSignature(headers, body): boolean {
-    const HMAC_PREFIX = "sha256=";
-    const messageId = headers["twitch-eventsub-message-id"];
-    const messageTimestamp = headers["twitch-eventsub-message-timestamp"];
-    const signature = headers["twitch-eventsub-message-signature"];
-    const message = messageId + messageTimestamp + JSON.stringify(body);
-
-    //get Hmac
-    const hmacMessage = HMAC_PREFIX + sha256.hmac(process.env.TWITCH_EVENTSUB_SECRET, message);
-
-    return hmacMessage === signature;
-  }
 }

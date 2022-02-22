@@ -1,6 +1,6 @@
 import { Controller, ForbiddenException, HttpStatus, Post, Req } from "@nestjs/common";
 import { EventSubService } from "./event-sub.service";
-import { STATUS, SUBSCRIPTION_TYPE } from "./constants";
+import { STATUS, SUBSCRIPTION_TYPE, TEST_REWARD_ID } from "./constants";
 
 @Controller("event-sub")
 export class EventSubController {
@@ -35,7 +35,7 @@ export class EventSubController {
 
       switch (type) {
         case SUBSCRIPTION_TYPE.FOLLOW:
-          return Promise.resolve(this.eventSubService.eventChannelFollow(event));
+          await this.eventSubService.eventChannelFollow(event);
           break;
         case SUBSCRIPTION_TYPE.STREAM_UP:
           await this.eventSubService.eventStreamUp();
@@ -58,6 +58,11 @@ export class EventSubController {
           }
           if (subscription?.condition?.from_broadcaster_user_id) {
             await this.eventSubService.eventStartRaid(event);
+          }
+          break;
+        case SUBSCRIPTION_TYPE.CUSTOM_REWARD_REDEMPTION:
+          if (TEST_REWARD_ID === event.reward.id) {
+            await this.eventSubService.eventCustomRewardRedemption(event);
           }
           break;
       }

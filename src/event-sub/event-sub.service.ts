@@ -2,7 +2,8 @@ import { Inject, Injectable } from "@nestjs/common";
 import { sha256 } from "js-sha256";
 import { ChatClient } from "@twurple/chat";
 import { DateTime } from "luxon";
-import { TWO_MINUTES_IN_SECONDES } from "./constants";
+import { MESSAGE_POINTS, TWO_MINUTES_IN_SECONDES } from "./constants";
+import { getRandomNumber } from "../utils/utils";
 
 @Injectable()
 export class EventSubService {
@@ -48,12 +49,6 @@ export class EventSubService {
       "#letetryl",
       `letetrBienvenue Bienvenue à toi @${event.user_name} ! Merci pour ton follow ! Tu rejoins notre petit groupe d'aventuriers ! letetrBienvenue`
     );
-
-    // TODO Rajouter total follow
-    // await this.chatClient.say(
-    //   "#letetryl",
-    //   `letetrBienvenue Bienvenue à toi @${event?.user_name} ! Merci pour ton follow ! Tu rejoins notre petit groupe de (total follow) aventuriers ! letetrBienvenue `
-    // );
   }
 
   async eventStreamUp() {
@@ -105,5 +100,10 @@ export class EventSubService {
         event.total > 1 && "s"
       }. Merci à toi, tu déchires ! letetrDanse letetrDanse letetrDanse`
     );
+  }
+
+  async eventCustomRewardRedemption(event: any) {
+    const randomMessage = getRandomNumber(0, MESSAGE_POINTS.length);
+    await this.chatClient.say("letetryl", MESSAGE_POINTS[randomMessage].replace("%s", event.user_name));
   }
 }
