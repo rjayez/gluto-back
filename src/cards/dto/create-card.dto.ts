@@ -5,4 +5,5 @@ export class CreateCardDto {
   serie: string;
   subtitle: string;
   pictureUrl: string;
+  category: string;
 }

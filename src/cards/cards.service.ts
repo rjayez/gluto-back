@@ -8,6 +8,8 @@ import { CreateCardDto } from "./dto/create-card.dto";
 import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
 import { Rarity, RarityDocument } from "../rarity/schema/rarity.schema";
+import { Serie, SerieDocument } from "../series/schema/serie.schema";
+import { Category, CategoryDocument } from "../categories/schema/category.schema";
 
 @Injectable()
 export class CardsService {
@@ -15,7 +17,9 @@ export class CardsService {
 
   constructor(
     @InjectModel(Card.name) private cardModel: Model<CardDocument>,
-    @InjectModel(Rarity.name) private rarityModel: Model<RarityDocument>
+    @InjectModel(Rarity.name) private rarityModel: Model<RarityDocument>,
+    @InjectModel(Serie.name) private serieModel: Model<SerieDocument>,
+    @InjectModel(Category.name) private categoryModel: Model<CategoryDocument>
   ) {
     this.s3Client = new S3Client({ region: "eu-west-3" });
   }
@@ -38,17 +42,22 @@ export class CardsService {
 
   async create(createCardDto: CreateCardDto) {
     const rarity = await this.rarityModel.findOne({ name: createCardDto.rarity }).exec();
-
+    const { _id: rarityId } = rarity;
+    const serie = await this.serieModel.findOne({ name: createCardDto.serie }).exec();
+    const { _id: serieId } = serie;
+    // const category = await this.categoryModel.findOne({ name: createCardDto.category }).exec();
+    // const { _id: categoryId } = category;
     const cardModel = {
       ...createCardDto,
-      rarity,
+      rarity: rarityId,
+      serie: serieId,
     };
 
     return this.cardModel.create(cardModel);
   }
 
   findAll() {
-    return this.cardModel.find().exec();
+    return this.cardModel.find().populate("rarity").populate("serie").exec();
   }
 
   findOne(id: number) {

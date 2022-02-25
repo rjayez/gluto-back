@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import { Body, Controller, Get, Post } from "@nestjs/common";
 import { CardsService } from "./cards.service";
 import { UploadDto } from "./dto/upload.dto";
 import { CreateCardDto } from "./dto/create-card.dto";
@@ -15,5 +15,10 @@ export class CardsController {
   @Post()
   create(@Body() createCardDto: CreateCardDto) {
     return this.cardsService.create(createCardDto);
+  }
+
+  @Get()
+  findAllCards() {
+    return this.cardsService.findAll();
   }
 }
