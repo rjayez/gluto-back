@@ -2,7 +2,6 @@ import { Injectable } from "@nestjs/common";
 import { createPresignedPost, PresignedPost } from "@aws-sdk/s3-presigned-post";
 import { S3Client } from "@aws-sdk/client-s3";
 import { v4 as uuidV4 } from "uuid";
-import { UpdateRarityDto } from "../rarity/dto/update-rarity.dto";
 import { Card, CardDocument } from "./schema/card.schema";
 import { CreateCardDto } from "./dto/create-card.dto";
 import { Model } from "mongoose";
@@ -10,6 +9,8 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Rarity, RarityDocument } from "../rarity/schema/rarity.schema";
 import { Serie, SerieDocument } from "../series/schema/serie.schema";
 import { Category, CategoryDocument } from "../categories/schema/category.schema";
+import { UpdateCardDto } from "./dto/update-card.dto";
+import { UpdateResult } from "mongodb";
 
 @Injectable()
 export class CardsService {
@@ -61,14 +62,24 @@ export class CardsService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} rarity`;
+    return this.cardModel.findOne({ _id: id });
   }
 
-  update(id: number, updateRarityDto: UpdateRarityDto) {
-    return `This action updates a #${id} rarity`;
+  async update(id: number, updateCardDto: UpdateCardDto): Promise<UpdateResult> {
+    const rarity = await this.rarityModel.findOne({ name: updateCardDto.rarity }).exec();
+    const { _id: rarityId } = rarity;
+    const serie = await this.serieModel.findOne({ name: updateCardDto.serie }).exec();
+    const { _id: serieId } = serie;
+    const cardModel = {
+      ...updateCardDto,
+      rarity: rarityId,
+      serie: serieId,
+    };
+
+    return this.cardModel.updateOne({ _id: id }, cardModel).exec();
   }
 
   remove(id: number) {
-    return `This action removes a #${id} rarity`;
+    return this.cardModel.findOne({ _id: id }).deleteOne().exec();
   }
 }

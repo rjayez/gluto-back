@@ -3,7 +3,7 @@ export class CreateCardDto {
   description: string;
   rarity: string;
   serie: string;
-  subtitle: string;
   pictureUrl: string;
   category: string;
+  subCategory: string;
 }

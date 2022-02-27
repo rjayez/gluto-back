@@ -1,7 +1,10 @@
-import { Body, Controller, Get, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, Req } from "@nestjs/common";
 import { CardsService } from "./cards.service";
 import { UploadDto } from "./dto/upload.dto";
 import { CreateCardDto } from "./dto/create-card.dto";
+import { UpdateCardDto } from "./dto/update-card.dto";
+import { UpdateResult } from "mongodb";
+import * as Path from "path";
 
 @Controller("/cards")
 export class CardsController {
@@ -20,5 +23,15 @@ export class CardsController {
   @Get()
   findAllCards() {
     return this.cardsService.findAll();
+  }
+
+  @Put(":id")
+  updatecCard(@Param("id") id: number, @Body() updateCardDto: UpdateCardDto): Promise<UpdateResult> {
+    return this.cardsService.update(id, updateCardDto);
+  }
+
+  @Delete(":id")
+  deleteCard(@Param("id") id: number) {
+    return this.cardsService.remove(id);
   }
 }
