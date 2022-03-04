@@ -46,9 +46,9 @@ export class EventSubController {
         case SUBSCRIPTION_TYPE.SUB:
           await this.eventSubService.eventSub(event);
           break;
-        // case SUBSCRIPTION_TYPE.RESUB:
-        //   await this.eventSubService.eventReSub(event);
-        //   break;
+        case SUBSCRIPTION_TYPE.RESUB:
+          await this.eventSubService.eventReSub(event);
+          break;
         case SUBSCRIPTION_TYPE.SUB_GIFT:
           await this.eventSubService.eventSubGift(event);
           break;
