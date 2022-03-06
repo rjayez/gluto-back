@@ -97,7 +97,7 @@ export class EventSubService {
     await this.chatClient.say(
       "#letetryl",
       `letetrCoeur L’incroyable @${event.user_name} offre ${event.total} sub${
-        event.total > 1 && "s"
+        event.total > 1 ? "s" : ""
       }. Merci à toi, tu déchires ! letetrDanse letetrDanse letetrDanse`
     );
   }
