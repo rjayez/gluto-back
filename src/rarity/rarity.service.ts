@@ -4,6 +4,7 @@ import { UpdateRarityDto } from "./dto/update-rarity.dto";
 import { Rarity, RarityDocument } from "./schema/rarity.schema";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
+import { DeleteResult, UpdateResult } from "mongodb";
 
 @Injectable()
 export class RarityService {
@@ -21,11 +22,11 @@ export class RarityService {
     return `This action returns a #${id} rarity`;
   }
 
-  update(id: number, updateRarityDto: UpdateRarityDto) {
-    return `This action updates a #${id} rarity`;
+  update(id: string, updateRarityDto: UpdateRarityDto): Promise<UpdateResult> {
+    return this.rarityModel.updateOne({ _id: id }, updateRarityDto).exec();
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} rarity`;
+  remove(id: string): Promise<DeleteResult> {
+    return this.rarityModel.deleteOne({ _id: id }).exec();
   }
 }

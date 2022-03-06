@@ -10,7 +10,8 @@ import { Rarity, RarityDocument } from "../rarity/schema/rarity.schema";
 import { Serie, SerieDocument } from "../series/schema/serie.schema";
 import { Category, CategoryDocument } from "../categories/schema/category.schema";
 import { UpdateCardDto } from "./dto/update-card.dto";
-import { UpdateResult } from "mongodb";
+import { DeleteResult, UpdateResult } from "mongodb";
+import { SubCategory } from "../subcategories/schema/subcategory.schema";
 
 @Injectable()
 export class CardsService {
@@ -20,7 +21,8 @@ export class CardsService {
     @InjectModel(Card.name) private cardModel: Model<CardDocument>,
     @InjectModel(Rarity.name) private rarityModel: Model<RarityDocument>,
     @InjectModel(Serie.name) private serieModel: Model<SerieDocument>,
-    @InjectModel(Category.name) private categoryModel: Model<CategoryDocument>
+    @InjectModel(Category.name) private categoryModel: Model<CategoryDocument>,
+    @InjectModel(SubCategory.name) private subCategoryModel: Model<CategoryDocument>
   ) {
     this.s3Client = new S3Client({ region: "eu-west-3" });
   }
@@ -42,44 +44,61 @@ export class CardsService {
   }
 
   async create(createCardDto: CreateCardDto) {
+    // TODO Promise.all ou autre
     const rarity = await this.rarityModel.findOne({ name: createCardDto.rarity }).exec();
     const { _id: rarityId } = rarity;
     const serie = await this.serieModel.findOne({ name: createCardDto.serie }).exec();
     const { _id: serieId } = serie;
-    // const category = await this.categoryModel.findOne({ name: createCardDto.category }).exec();
-    // const { _id: categoryId } = category;
+    const category = await this.categoryModel.findOne({ name: createCardDto.category }).exec();
+    const { _id: categoryId } = category;
+    const subCategory = await this.subCategoryModel.findOne({ name: createCardDto.subCategory }).exec();
+    const { _id: subCategoryId } = subCategory;
     const cardModel = {
       ...createCardDto,
       rarity: rarityId,
       serie: serieId,
+      category: categoryId,
+      subCategory: subCategoryId,
     };
 
     return this.cardModel.create(cardModel);
   }
 
   findAll() {
-    return this.cardModel.find().populate("rarity").populate("serie").exec();
+    return this.cardModel
+      .find()
+      .populate("rarity")
+      .populate("serie")
+      .populate("category")
+      .populate("subCategory")
+      .exec();
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return this.cardModel.findOne({ _id: id });
   }
 
-  async update(id: number, updateCardDto: UpdateCardDto): Promise<UpdateResult> {
+  async update(id: string, updateCardDto: UpdateCardDto): Promise<UpdateResult> {
     const rarity = await this.rarityModel.findOne({ name: updateCardDto.rarity }).exec();
     const { _id: rarityId } = rarity;
     const serie = await this.serieModel.findOne({ name: updateCardDto.serie }).exec();
     const { _id: serieId } = serie;
+    const category = await this.categoryModel.findOne({ name: updateCardDto.category }).exec();
+    const { _id: categoryId } = category;
+    const subCategory = await this.subCategoryModel.findOne({ name: updateCardDto.subCategory }).exec();
+    const { _id: subCategoryId } = subCategory;
     const cardModel = {
       ...updateCardDto,
       rarity: rarityId,
       serie: serieId,
+      category: categoryId,
+      subCategory: subCategoryId,
     };
 
     return this.cardModel.updateOne({ _id: id }, cardModel).exec();
   }
 
-  remove(id: number) {
-    return this.cardModel.findOne({ _id: id }).deleteOne().exec();
+  remove(id: string): Promise<DeleteResult> {
+    return this.cardModel.deleteOne({ _id: id }).exec();
   }
 }

@@ -3,7 +3,7 @@ import { Document } from "mongoose";
 
 export type RarityDocument = Rarity & Document;
 
-@Schema({ discriminatorKey: "name" })
+@Schema()
 export class Rarity {
   @Prop()
   name: string;
@@ -13,6 +13,9 @@ export class Rarity {
 
   @Prop()
   rate: number;
+
+  @Prop()
+  order: number;
 }
 
 export const RaritySchema = SchemaFactory.createForClass(Rarity);

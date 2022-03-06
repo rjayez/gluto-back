@@ -6,6 +6,7 @@ import { Card, CardSchema } from "./schema/card.schema";
 import { Rarity, RaritySchema } from "../rarity/schema/rarity.schema";
 import { Serie, SerieSchema } from "../series/schema/serie.schema";
 import { Category, CategorySchema } from "../categories/schema/category.schema";
+import { SubCategory, SubCategorySchema } from "../subcategories/schema/subcategory.schema";
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { Category, CategorySchema } from "../categories/schema/category.schema";
       { name: Rarity.name, schema: RaritySchema },
       { name: Serie.name, schema: SerieSchema },
       { name: Category.name, schema: CategorySchema },
+      { name: SubCategory.name, schema: SubCategorySchema },
     ]),
   ],
   controllers: [CardsController],

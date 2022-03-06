@@ -13,6 +13,12 @@ export class Serie {
 
   @Prop()
   dropEnabled: boolean;
+
+  @Prop()
+  visible: boolean;
+
+  @Prop()
+  order: number;
 }
 
 export const SerieSchema = SchemaFactory.createForClass(Serie);

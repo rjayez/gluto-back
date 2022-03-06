@@ -9,4 +9,5 @@ export class UpdateCardDto {
   serie: string;
   subtitle: string;
   category: string;
+  subCategory: string;
 }

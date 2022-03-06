@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
 import { RarityService } from "./rarity.service";
 import { CreateRarityDto } from "./dto/create-rarity.dto";
 import { UpdateRarityDto } from "./dto/update-rarity.dto";
@@ -22,13 +22,14 @@ export class RarityController {
     return this.rarityService.findOne(+id);
   }
 
-  @Patch(":id")
-  update(@Param("id") id: string, @Body() updateRarityDto: UpdateRarityDto) {
-    return this.rarityService.update(+id, updateRarityDto);
+  @Put(":id")
+  updateRarity(@Param("id") id: string, @Body() updateRarityDto: UpdateRarityDto) {
+    return this.rarityService.update(id, updateRarityDto);
   }
 
   @Delete(":id")
   remove(@Param("id") id: string) {
-    return this.rarityService.remove(+id);
+    console.debug(id);
+    return this.rarityService.remove(id);
   }
 }

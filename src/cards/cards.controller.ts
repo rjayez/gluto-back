@@ -26,12 +26,12 @@ export class CardsController {
   }
 
   @Put(":id")
-  updatecCard(@Param("id") id: number, @Body() updateCardDto: UpdateCardDto): Promise<UpdateResult> {
+  updateCard(@Param("id") id: string, @Body() updateCardDto: UpdateCardDto): Promise<UpdateResult> {
     return this.cardsService.update(id, updateCardDto);
   }
 
   @Delete(":id")
-  deleteCard(@Param("id") id: number) {
+  deleteCard(@Param("id") id: string) {
     return this.cardsService.remove(id);
   }
 }
