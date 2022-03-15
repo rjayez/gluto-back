@@ -25,7 +25,7 @@ export class TwitchService {
     const weekSchedule = this.WEEK_FR.map(day => {
       const dayObject = {
         jour: day,
-        date: nextDay.toUTC(60),
+        date: nextDay.toISODate(),
         estPassee: nextDay < DateTime.now().startOf("day"),
       };
       nextDay = nextDay.plus({ days: 1 });
@@ -48,7 +48,7 @@ export class TwitchService {
         .then(twitchScedule => {
           return weekSchedule.map(dailySchedule => {
             const streams = twitchScedule.filter(schedule =>
-              dailySchedule.date.hasSame(DateTime.fromISO(schedule.debut), "day")
+              DateTime.fromISO(dailySchedule.date).hasSame(DateTime.fromISO(schedule.debut), "day")
             );
             return {
               ...dailySchedule,
