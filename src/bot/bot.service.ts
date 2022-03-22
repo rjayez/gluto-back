@@ -7,6 +7,8 @@ import { getAge, getQI, getRandomNumber } from "../utils/utils";
 export class BotService implements OnModuleInit {
   private readonly listCmd = [
     "!bot",
+    "!bonapp",
+    "!bug",
     "!cri",
     "!dé",
     "!chaise",
@@ -25,6 +27,8 @@ export class BotService implements OnModuleInit {
     "!bisou",
   ];
 
+  private readonly _30_MINUTES_IN_MS = 1000 * 60 * 30;
+
   constructor(@Inject("CHAT_CLIENT") private chatClient: ChatClient) {}
 
   async postMessage(msg: string) {
@@ -34,7 +38,7 @@ export class BotService implements OnModuleInit {
   async onModuleInit(): Promise<any> {
     this.chatClient.onMessage(async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
       if (process.env.EN_DEV) {
-        return;
+        // return;
       }
 
       if (["!cmd", "!commande", "!commandes"].includes(message.toLowerCase())) {
@@ -60,6 +64,14 @@ export class BotService implements OnModuleInit {
           channel,
           "Je suis un bot en plein apprentissage ! J'apprends beaucoup tous les jours letetrComfy"
         );
+      }
+
+      if (message.toLowerCase() === "!bug") {
+        await this.chatClient.say(
+          channel,
+          "Votre attention à tous, chers viewers, le jeu a planté mais votre streamer préféré va rattraper le coup !! :c"
+        );
+        // ⚠⚠Chères Gluantes et chers Gluants, votre streamer préféré rencontre quelques problèmes techniques (aucunement dû à un manque de skill). Heureusement, ses capacités hors du commun vont tout régler en un rien de temps. Envoyez vos meilleurs emotes pour l'encourager !!
       }
 
       if (message.toLowerCase() === "!cri") {
@@ -106,6 +118,13 @@ export class BotService implements OnModuleInit {
         await this.chatClient.say(channel, `Je vous conseille la Menthe Pastille, c'est fait par un pharmacien !`);
       }
 
+      if (message.toLowerCase() === "!bonapp") {
+        await this.chatClient.say(
+          channel,
+          ["Bon appétit ChefFrank", "Bon appétit, reviens-nous garni Jebasted Jebasted Jebasted"][getRandomNumber(0, 1)]
+        );
+      }
+
       if (message.toLowerCase() === "!idiot") {
         await this.chatClient.say(channel, "Tyé fada !");
       }
@@ -141,5 +160,13 @@ export class BotService implements OnModuleInit {
     this.chatClient.onSub(async (channel, user, subInfo, msg) => {
       await this.chatClient.say(channel, `letetrAAAH letetrAAAH Merci ${user} pour le sub letetrAAAH letetrAAAH`);
     });
+
+    this.messageOnInterval();
+  }
+
+  messageOnInterval(): void {
+    setInterval(async _ => {
+      await this.chatClient.say("#letetryl", "Retrouvez l'incroyable site du Tetryl => 🔥 https://tetryl.stream 🔥");
+    }, this._30_MINUTES_IN_MS);
   }
 }
