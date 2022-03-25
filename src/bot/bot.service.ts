@@ -25,6 +25,7 @@ export class BotService implements OnModuleInit {
     "!qi",
     "!age",
     "!bisou",
+    "!chaussons",
   ];
 
   private readonly _30_MINUTES_IN_MS = 1000 * 60 * 30;
@@ -82,6 +83,13 @@ export class BotService implements OnModuleInit {
           "Il est parti chercher du lait",
         ];
         await this.chatClient.say(channel, messages[getRandomNumber(0, messages.length - 1)]);
+      }
+
+      if (message.toLowerCase() === "!chaussons") {
+        await this.chatClient.say(
+          channel,
+          `/me apporte ses chaussons à ${user}, et un bon chocolat chaud. Profites bien du spectacle ! letetrComfy`
+        );
       }
 
       if (message.toLowerCase() === "!cri") {
@@ -176,7 +184,10 @@ export class BotService implements OnModuleInit {
 
   messageOnInterval(): void {
     setInterval(async _ => {
-      await this.chatClient.say("#letetryl", "Retrouvez l'incroyable site du Tetryl => 🔥 https://tetryl.stream 🔥");
+      await this.chatClient.say(
+        "#letetryl",
+        "Pour prolonger l'aventure, rejoignez les réseaux sociaux du stream : ✨ https://linktr.ee/Tetryl ✨"
+      );
     }, this._30_MINUTES_IN_MS);
   }
 }
