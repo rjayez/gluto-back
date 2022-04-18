@@ -49,6 +49,7 @@ export class BotService implements OnModuleInit {
   async onModuleInit(): Promise<void> {
     // pour éviter les doubles messages en live
     return;
+
     await this.chatClient.say("#letetryl", "Je me réveille zzzZZZ");
 
     this.listener.subscribeToChannelFollowEvents(LE_TETRYL_ID, event => {
