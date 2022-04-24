@@ -85,6 +85,16 @@ export class BotService implements OnModuleInit {
         await this.chatClient.say(channel, messages[getRandomNumber(0, messages.length - 1)]);
       }
 
+      if (message.toLowerCase().startsWith("!pelle")) {
+        const split = message.split("!pelle");
+        const messageArg = split[1].trim();
+        if (messageArg === "") {
+          await this.chatClient.say(channel, "/me Pelle mets un coup de pelle dans le tchat.");
+        } else {
+          await this.chatClient.say(channel, `/me Pelle mets un coup de pelle à ${messageArg}.`);
+        }
+      }
+
       if (message.toLowerCase() === "!chaussons") {
         await this.chatClient.say(
           channel,
