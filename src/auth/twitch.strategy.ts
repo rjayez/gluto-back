@@ -10,7 +10,7 @@ export class TwitchStrategy extends PassportStrategy(Strategy) {
     super({
       clientID: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
-      callbackURL: encodeURI("https://gluto-back-staging.herokuapp.com/auth/redirect"),
+      callbackURL: "https://gluto-back-staging.herokuapp.com/auth/redirect",
       // callbackURL: encodeURI("http://localhost:5000/auth/redirect"),
       scope: "",
       passReqToCallback: true,
@@ -25,6 +25,10 @@ export class TwitchStrategy extends PassportStrategy(Strategy) {
    * @param profile
    */
   async validate(originalRequest: any, accessToken: string, refreshToken: string, profile: any) {
+    console.debug("origin", originalRequest);
+    console.debug("origin", accessToken);
+    console.debug("origin", refreshToken);
+    console.debug("origin", profile);
     return {
       originalRequest,
       accessToken,
