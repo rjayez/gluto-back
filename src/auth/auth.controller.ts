@@ -20,4 +20,6 @@ export class AuthController {
 
     return this.authService.createOrFindUser(id, login);
   }
+
+  // TODO Gérer le fail de redirect (https://www.passportjs.org/packages/passport-twitch/)
 }
