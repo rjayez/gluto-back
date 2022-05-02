@@ -10,8 +10,8 @@ export class TwitchStrategy extends PassportStrategy(Strategy) {
     super({
       clientID: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
-      // callbackURL: encodeURI("https://gluto-back-staging.herokuapp.com/auth/redirect"),
-      callbackURL: "/auth/redirect",
+      callbackURL: encodeURI("https://gluto-back-staging.herokuapp.com/auth/redirect"),
+      // callbackURL: "/auth/redirect",
       scope: "user:read:email",
       passReqToCallback: false,
     });
