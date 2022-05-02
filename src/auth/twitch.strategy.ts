@@ -14,6 +14,7 @@ export class TwitchStrategy extends PassportStrategy(Strategy) {
       // callbackURL: "/auth/redirect",
       scope: "user:read:email",
       passReqToCallback: false,
+      proxy: true,
     });
   }
 
