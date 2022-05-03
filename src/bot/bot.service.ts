@@ -67,6 +67,10 @@ export class BotService implements OnModuleInit {
         );
       }
 
+      if (message.toLowerCase() === "!boomer") {
+        await this.chatClient.say(channel, "On ne peut plus rien dire 😡");
+      }
+
       if (message.toLowerCase() === "!bug") {
         await this.chatClient.say(
           channel,
