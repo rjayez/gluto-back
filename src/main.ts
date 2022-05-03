@@ -8,7 +8,7 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.enableCors(CORS_OPTIONS);
   app.use(helmet());
-  app.set("trust proxy", 1);
+  app.set("trust proxy");
 
   await app.listen(process.env.PORT);
 }
