@@ -9,6 +9,9 @@ export class AuthController {
   @UseGuards(TwitchAuthGuard)
   @Get("/login")
   login(@Request() req) {
+    console.error(process.env.HTTP_PROXY);
+    console.info("ENV HTTPS_PROXY", process.env.HTTPS_PROXY);
+
     return req.user;
   }
 
@@ -16,9 +19,9 @@ export class AuthController {
   @Get("/redirect")
   redirect(@Request() req) {
     console.debug("redirect", req.user.profile);
-    const { id, login } = req.user.profile;
+    // const { id, login } = req.user.profile;
 
-    return this.authService.createOrFindUser(id, login);
+    // return this.authService.createOrFindUser(id, login);
   }
 
   // TODO Gérer le fail de redirect (https://www.passportjs.org/packages/passport-twitch/)
