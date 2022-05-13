@@ -9,7 +9,7 @@ async function bootstrap() {
   app.enableCors(CORS_OPTIONS);
   // app.use(helmet());
   app.set("trust proxy", 1);
-  console.info("ENV HTTP_PROXY", process.env.HTTP_PROXY);
+  console.info("ENV HTTPS_PROXY", process.env.HTTPS_PROXY);
 
   await app.listen(process.env.PORT);
 }
