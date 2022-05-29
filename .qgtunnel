@@ -1,0 +1,6 @@
+
+[qgtunnel.Mongo_DB]
+accept = "127.0.0.1:27017"
+connect = "cluster0.jvbmq.mongodb.net:27017"
+encrypted = false
+transparent = true
