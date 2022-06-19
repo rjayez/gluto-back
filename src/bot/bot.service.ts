@@ -110,6 +110,13 @@ export class BotService implements OnModuleInit {
         await this.chatClient.say(channel, "Bouh !");
       }
 
+      if (["!ffz", "!frankerfacez"].includes(message.toLowerCase())) {
+        await this.chatClient.say(
+          channel,
+          `Si vous ne voyez pas cette émote => slimeW <= Alors vous avez besoin de télécharger l'extension https://www.frankerfacez.com`
+        );
+      }
+
       if (message.toLowerCase() === "!chaise") {
         await this.chatClient.say(channel, "C'EST UNE CHAISE, BORDEL !");
       }
