@@ -133,9 +133,9 @@ export class BotService implements OnModuleInit {
         await this.chatClient.say(channel, "J'ai pas assez dormi !");
       }
 
-      if (message.toLowerCase() === "!zireael") {
-        await this.chatClient.say(channel, "Nik toi Zireael !");
-      }
+      // if (message.toLowerCase() === "!zireael") {
+      //   await this.chatClient.say(channel, "Nik toi Zireael !");
+      // }
 
       if (message.toLowerCase() === "!romanus") {
         await this.chatClient.say(channel, "Pas touche à Romanus !");
