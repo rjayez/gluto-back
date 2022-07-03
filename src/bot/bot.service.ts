@@ -60,6 +60,13 @@ export class BotService implements OnModuleInit {
         console.log("tags", user);
       }
 
+      if (message.toLowerCase() === "!sandrine") {
+        await this.chatClient.say(
+          channel,
+          "La météo de la semaine vous est présentée par la merveilleuse Sandrine de la compta 🌞"
+        );
+      }
+
       if (message.toLowerCase() === "!bot") {
         await this.chatClient.say(
           channel,
