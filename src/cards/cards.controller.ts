@@ -1,10 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Req } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
 import { CardsService } from "./cards.service";
 import { UploadDto } from "./dto/upload.dto";
 import { CreateCardDto } from "./dto/create-card.dto";
 import { UpdateCardDto } from "./dto/update-card.dto";
 import { UpdateResult } from "mongodb";
-import * as Path from "path";
 
 @Controller("/cards")
 export class CardsController {

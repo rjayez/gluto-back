@@ -1,10 +1,13 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document } from "mongoose";
+import { Document, ObjectId } from "mongoose";
 
 export type RarityDocument = Rarity & Document;
 
 @Schema()
 export class Rarity {
+  //@Prop({ type: ObjectId })
+  _id: string;
+
   @Prop()
   name: string;
 

@@ -17,11 +17,6 @@ export class RarityController {
     return this.rarityService.findAll();
   }
 
-  @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.rarityService.findOne(+id);
-  }
-
   @Put(":id")
   updateRarity(@Param("id") id: string, @Body() updateRarityDto: UpdateRarityDto) {
     return this.rarityService.update(id, updateRarityDto);

@@ -12,7 +12,6 @@
   "scripts": {
     "prebuild": "node_modules/.bin/rimraf dist",
     "build": "node_modules/.bin/nest build",
-    "preinstall": "curl https://s3.amazonaws.com/quotaguard/qgtunnel-latest.tar.gz | tar xz",
     "format": "node_modules/.bin/prettier --write \\\\\\\\\\\\\\\"../src/**/*.ts\\\\\\\\\\\\\\\" \\\\\\\\\\\\\\\"../test/**/*.ts\\\\\\\\\\\\\\\"",
     "start": "node_modules/.bin/nest start",
     "start:dev": "node_modules/.bin/nest start --watch",
@@ -39,6 +38,7 @@
     "@nestjs/mapped-types": "^1.0.1",
     "@nestjs/mongoose": "^9.0.2",
     "@nestjs/passport": "^8.1.1",
+    "@nestjs/swagger": "^6.0.5",
     "@nestjs/platform-express": "^8.0.0",
     "@nestjs/schematics": "^8.0.0",
     "@nestjs/testing": "^8.0.0",

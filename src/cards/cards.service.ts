@@ -1,25 +1,26 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { createPresignedPost, PresignedPost } from "@aws-sdk/s3-presigned-post";
 import { S3Client } from "@aws-sdk/client-s3";
 import { v4 as uuidV4 } from "uuid";
 import { Card, CardDocument } from "./schema/card.schema";
 import { CreateCardDto } from "./dto/create-card.dto";
-import { Model } from "mongoose";
+import { Model, Schema } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
-import { Rarity, RarityDocument } from "../rarity/schema/rarity.schema";
+import { Rarity } from "../rarity/schema/rarity.schema";
 import { Serie, SerieDocument } from "../series/schema/serie.schema";
 import { Category, CategoryDocument } from "../categories/schema/category.schema";
 import { UpdateCardDto } from "./dto/update-card.dto";
-import { DeleteResult, UpdateResult } from "mongodb";
+import { DeleteResult, ObjectId, UpdateResult } from "mongodb";
 import { SubCategory } from "../subcategories/schema/subcategory.schema";
+import { RarityService } from "../rarity/rarity.service";
 
 @Injectable()
 export class CardsService {
   s3Client: S3Client;
+  @Inject() private readonly rarityService: RarityService;
 
   constructor(
     @InjectModel(Card.name) private cardModel: Model<CardDocument>,
-    @InjectModel(Rarity.name) private rarityModel: Model<RarityDocument>,
     @InjectModel(Serie.name) private serieModel: Model<SerieDocument>,
     @InjectModel(Category.name) private categoryModel: Model<CategoryDocument>,
     @InjectModel(SubCategory.name) private subCategoryModel: Model<CategoryDocument>
@@ -45,8 +46,7 @@ export class CardsService {
 
   async create(createCardDto: CreateCardDto) {
     // TODO Promise.all ou autre
-    const rarity = await this.rarityModel.findOne({ name: createCardDto.rarity }).exec();
-    const { _id: rarityId } = rarity;
+    const rarity = await this.rarityService.findOneByName(createCardDto.rarity);
     const serie = await this.serieModel.findOne({ name: createCardDto.serie }).exec();
     const { _id: serieId } = serie;
     const category = await this.categoryModel.findOne({ name: createCardDto.category }).exec();
@@ -55,7 +55,7 @@ export class CardsService {
     const { _id: subCategoryId } = subCategory;
     const cardModel = {
       ...createCardDto,
-      rarity: rarityId,
+      rarity: rarity._id,
       serie: serieId,
       category: categoryId,
       subCategory: subCategoryId,
@@ -64,7 +64,7 @@ export class CardsService {
     return this.cardModel.create(cardModel);
   }
 
-  findAll() {
+  findAll(): Promise<Card[]> {
     return this.cardModel
       .find()
       .populate("rarity")
@@ -74,13 +74,42 @@ export class CardsService {
       .exec();
   }
 
-  findOne(id: string) {
-    return this.cardModel.findOne({ _id: id });
+  async dropCardsForCollection(nbCard: number): Promise<Card[]> {
+    let droppedCard: Card[] = [];
+    let droppedRarity: Rarity = await this.rarityService.getRandomRarities();
+
+    for (let i = 0; i < nbCard; i++) {
+      const card = await this.getRandomCardsForDrop(droppedRarity.name);
+      droppedCard.push(card);
+    }
+
+    return droppedCard;
+  }
+
+  getRandomCardsForDrop(rarity: string): Promise<Card> {
+    return this.cardModel
+      .find()
+      .populate({ path: "serie", match: { dropEnabled: true } })
+      .populate({ path: "rarity", match: { name: rarity } })
+      .exec()
+      .then(cards => {
+        const randomCard = Math.floor(Math.random() * cards.length);
+        return cards[randomCard];
+      });
+  }
+
+  findOne(id: string): Promise<Card> {
+    return this.cardModel
+      .findOne({ _id: id })
+      .populate("rarity")
+      .populate("serie")
+      .populate("category")
+      .populate("subCategory")
+      .exec();
   }
 
   async update(id: string, updateCardDto: UpdateCardDto): Promise<UpdateResult> {
-    const rarity = await this.rarityModel.findOne({ name: updateCardDto.rarity }).exec();
-    const { _id: rarityId } = rarity;
+    const rarity = await this.rarityService.findOneByName(updateCardDto.rarity);
     const serie = await this.serieModel.findOne({ name: updateCardDto.serie }).exec();
     const { _id: serieId } = serie;
     const category = await this.categoryModel.findOne({ name: updateCardDto.category }).exec();
@@ -89,16 +118,18 @@ export class CardsService {
     const { _id: subCategoryId } = subCategory;
     const cardModel = {
       ...updateCardDto,
-      rarity: rarityId,
+      rarity: rarity._id,
       serie: serieId,
       category: categoryId,
       subCategory: subCategoryId,
     };
 
-    return this.cardModel.updateOne({ _id: id }, cardModel).exec();
+    console.info("cardModel", cardModel);
+
+    return this.cardModel.updateOne({ _id: new ObjectId(id) }, cardModel).exec();
   }
 
   remove(id: string): Promise<DeleteResult> {
-    return this.cardModel.deleteOne({ _id: id }).exec();
+    return this.cardModel.deleteOne({ _id: new ObjectId(id) }).exec();
   }
 }

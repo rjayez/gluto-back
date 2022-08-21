@@ -12,6 +12,7 @@ import { SeriesModule } from "./series/series.module";
 import { AuthModule } from "./auth/auth.module";
 import { BotModule } from "./bot/bot.module";
 import { LoggerMiddleware } from "./logger.middleware";
+import { UsersModule } from "./users/users.module";
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { LoggerMiddleware } from "./logger.middleware";
     RarityModule,
     SeriesModule,
     AuthModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

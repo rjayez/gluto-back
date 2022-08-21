@@ -3,16 +3,16 @@ import { CardsController } from "./cards.controller";
 import { CardsService } from "./cards.service";
 import { MongooseModule } from "@nestjs/mongoose";
 import { Card, CardSchema } from "./schema/card.schema";
-import { Rarity, RaritySchema } from "../rarity/schema/rarity.schema";
 import { Serie, SerieSchema } from "../series/schema/serie.schema";
 import { Category, CategorySchema } from "../categories/schema/category.schema";
 import { SubCategory, SubCategorySchema } from "../subcategories/schema/subcategory.schema";
+import { RarityModule } from "../rarity/rarity.module";
 
 @Module({
   imports: [
+    RarityModule,
     MongooseModule.forFeature([
       { name: Card.name, schema: CardSchema },
-      { name: Rarity.name, schema: RaritySchema },
       { name: Serie.name, schema: SerieSchema },
       { name: Category.name, schema: CategorySchema },
       { name: SubCategory.name, schema: SubCategorySchema },
@@ -20,5 +20,6 @@ import { SubCategory, SubCategorySchema } from "../subcategories/schema/subcateg
   ],
   controllers: [CardsController],
   providers: [CardsService],
+  exports: [CardsService],
 })
 export class CardsModule {}

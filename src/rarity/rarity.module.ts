@@ -8,5 +8,6 @@ import { Rarity, RaritySchema } from "./schema/rarity.schema";
   imports: [MongooseModule.forFeature([{ name: Rarity.name, schema: RaritySchema }])],
   controllers: [RarityController],
   providers: [RarityService],
+  exports: [RarityService],
 })
 export class RarityModule {}

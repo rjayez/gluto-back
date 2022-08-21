@@ -5,11 +5,15 @@ import { Rarity } from "../../rarity/schema/rarity.schema";
 import { Serie } from "../../series/schema/serie.schema";
 import { Category } from "../../categories/schema/category.schema";
 import { SubCategory } from "../../subcategories/schema/subcategory.schema";
+import { ObjectId } from "mongodb";
 
 export type CardDocument = Card & Document;
 
 @Schema()
 export class Card {
+  @Prop({ type: ObjectId })
+  _id: string;
+
   @Prop()
   name: string;
 
