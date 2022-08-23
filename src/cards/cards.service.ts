@@ -45,6 +45,7 @@ export class CardsService {
   }
 
   async create(createCardDto: CreateCardDto) {
+    console.info("createCardDto", createCardDto);
     // TODO Promise.all ou autre
     const rarity = await this.rarityService.findOneByName(createCardDto.rarity);
     const serie = await this.serieModel.findOne({ name: createCardDto.serie }).exec();
@@ -54,12 +55,15 @@ export class CardsService {
     const subCategory = await this.subCategoryModel.findOne({ name: createCardDto.subCategory }).exec();
     const { _id: subCategoryId } = subCategory;
     const cardModel = {
+      _id: new ObjectId(),
       ...createCardDto,
       rarity: rarity._id,
       serie: serieId,
       category: categoryId,
       subCategory: subCategoryId,
     };
+
+    console.info("cardModel", cardModel);
 
     return this.cardModel.create(cardModel);
   }
