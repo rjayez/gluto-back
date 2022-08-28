@@ -110,6 +110,10 @@ export class BotService implements OnModuleInit {
         }
       }
 
+      if (["!sncf", "!tchoutchou"].includes(message.toLowerCase())) {
+        await this.chatClient.say(channel, "letetrAAAH TCHOUTCHOUUUU letetrAAAH");
+      }
+
       if (message.toLowerCase() === "!chaussons") {
         await this.chatClient.say(
           channel,
