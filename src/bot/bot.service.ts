@@ -15,7 +15,7 @@ export class BotService implements OnModuleInit {
     "!banc",
     "!fada",
     "!romanusdodo",
-    "!zireael",
+    // "!zireael",
     "!romanus",
     "!nik",
     "!frites",
@@ -85,6 +85,10 @@ export class BotService implements OnModuleInit {
           // "Votre attention à tous, chers viewers, le jeu a planté mais votre streamer préféré va rattraper le coup !! :c"
         );
         // ⚠⚠Chères Gluantes et chers Gluants, votre streamer préféré rencontre quelques problèmes techniques (aucunement dû à un manque de skill). Heureusement, ses capacités hors du commun vont tout régler en un rien de temps. Envoyez vos meilleurs emotes pour l'encourager !!
+      }
+
+      if (message.toLowerCase() === "!sub") {
+        await this.chatClient.say(channel, "SwiftRage F'ÎLE LES SUBS SwiftRage");
       }
 
       if (message.toLowerCase().includes("papa")) {
