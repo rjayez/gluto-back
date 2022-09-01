@@ -14,6 +14,14 @@ export class SeriesService {
     return this.seriesModel.create(createSerieDto);
   }
 
+  findEnabledSerie(): Promise<Serie[]> {
+    return this.seriesModel.find({ dropEnabled: true }).exec();
+  }
+
+  findOneByName(name: string): Promise<Serie> {
+    return this.seriesModel.findOne({ name: name }).exec();
+  }
+
   findAll(): Promise<Serie[]> {
     return this.seriesModel.find().exec();
   }

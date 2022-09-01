@@ -2,10 +2,15 @@ import { Controller, Get, InternalServerErrorException, NotFoundException, Param
 import { CardsService } from "../cards/cards.service";
 import { UsersService } from "./users.service";
 import { ApiNoContentResponse } from "@nestjs/swagger";
+import { SocketService } from "./socket.service";
 
 @Controller("users")
 export class UsersController {
-  constructor(private readonly usersService: UsersService, private readonly cardsService: CardsService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly socketService: SocketService,
+    private readonly cardsService: CardsService
+  ) {}
 
   @Get(":id/collection")
   async getCollection(@Param("id") twitchId: string) {
@@ -24,7 +29,8 @@ export class UsersController {
     if (!userExist) throw new NotFoundException();
 
     // Tirage des cartes
-    const cards = await this.cardsService.dropCardsForCollection(1);
+    const cards = await this.cardsService.dropCardsForCollection(3);
+    this.socketService.launchDropAnimation("Rom@nus", cards);
     // Insertion dans la base
     return this.usersService
       .addCardToCollection(twitchId, cards)

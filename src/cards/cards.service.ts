@@ -13,15 +13,17 @@ import { UpdateCardDto } from "./dto/update-card.dto";
 import { DeleteResult, ObjectId, UpdateResult } from "mongodb";
 import { SubCategory } from "../subcategories/schema/subcategory.schema";
 import { RarityService } from "../rarity/rarity.service";
+import { SeriesService } from "../series/series.service";
 
 @Injectable()
 export class CardsService {
   s3Client: S3Client;
   @Inject() private readonly rarityService: RarityService;
+  @Inject() private readonly seriesService: SeriesService;
 
   constructor(
     @InjectModel(Card.name) private cardModel: Model<CardDocument>,
-    @InjectModel(Serie.name) private serieModel: Model<SerieDocument>,
+    // @InjectModel(Serie.name) private serieModel: Model<SerieDocument>,
     @InjectModel(Category.name) private categoryModel: Model<CategoryDocument>,
     @InjectModel(SubCategory.name) private subCategoryModel: Model<CategoryDocument>
   ) {
@@ -48,8 +50,7 @@ export class CardsService {
     console.info("createCardDto", createCardDto);
     // TODO Promise.all ou autre
     const rarity = await this.rarityService.findOneByName(createCardDto.rarity);
-    const serie = await this.serieModel.findOne({ name: createCardDto.serie }).exec();
-    const { _id: serieId } = serie;
+    const serie = await this.seriesService.findOneByName(createCardDto.serie);
     const category = await this.categoryModel.findOne({ name: createCardDto.category }).exec();
     const { _id: categoryId } = category;
     const subCategory = await this.subCategoryModel.findOne({ name: createCardDto.subCategory }).exec();
@@ -58,12 +59,10 @@ export class CardsService {
       _id: new ObjectId(),
       ...createCardDto,
       rarity: rarity._id,
-      serie: serieId,
+      serie: serie._id,
       category: categoryId,
       subCategory: subCategoryId,
     };
-
-    console.info("cardModel", cardModel);
 
     return this.cardModel.create(cardModel);
   }
@@ -80,9 +79,9 @@ export class CardsService {
 
   async dropCardsForCollection(nbCard: number): Promise<Card[]> {
     let droppedCard: Card[] = [];
-    let droppedRarity: Rarity = await this.rarityService.getRandomRarities();
 
     for (let i = 0; i < nbCard; i++) {
+      let droppedRarity: Rarity = await this.rarityService.getRandomRarities();
       const card = await this.getRandomCardsForDrop(droppedRarity.name);
       droppedCard.push(card);
     }
@@ -90,14 +89,17 @@ export class CardsService {
     return droppedCard;
   }
 
-  getRandomCardsForDrop(rarity: string): Promise<Card> {
+  async getRandomCardsForDrop(rarity: string): Promise<Card> {
+    const rarityObject = await this.rarityService.findOneByName(rarity);
+    const enabledSerie = await this.seriesService.findEnabledSerie();
     return this.cardModel
-      .find()
-      .populate({ path: "serie", match: { dropEnabled: true } })
-      .populate({ path: "rarity", match: { name: rarity } })
+      .find({ rarity: rarityObject._id, $in: { serie: enabledSerie } })
+      .populate({ path: "serie" })
+      .populate({ path: "rarity" })
       .exec()
       .then(cards => {
         const randomCard = Math.floor(Math.random() * cards.length);
+        console.info(cards[randomCard]);
         return cards[randomCard];
       });
   }
@@ -114,8 +116,7 @@ export class CardsService {
 
   async update(id: string, updateCardDto: UpdateCardDto): Promise<UpdateResult> {
     const rarity = await this.rarityService.findOneByName(updateCardDto.rarity);
-    const serie = await this.serieModel.findOne({ name: updateCardDto.serie }).exec();
-    const { _id: serieId } = serie;
+    const serie = await this.seriesService.findOneByName(updateCardDto.serie);
     const category = await this.categoryModel.findOne({ name: updateCardDto.category }).exec();
     const { _id: categoryId } = category;
     const subCategory = await this.subCategoryModel.findOne({ name: updateCardDto.subCategory }).exec();
@@ -123,12 +124,10 @@ export class CardsService {
     const cardModel = {
       ...updateCardDto,
       rarity: rarity._id,
-      serie: serieId,
+      serie: serie._id,
       category: categoryId,
       subCategory: subCategoryId,
     };
-
-    console.info("cardModel", cardModel);
 
     return this.cardModel.updateOne({ _id: new ObjectId(id) }, cardModel).exec();
   }

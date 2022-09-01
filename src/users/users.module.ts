@@ -6,6 +6,7 @@ import { CardsModule } from "../cards/cards.module";
 import { UsersController } from "./users.controller";
 import { CollectionCard, CollectionCardSchema } from "./schema/collectionCard.schema";
 import { Card, CardSchema } from "../cards/schema/card.schema";
+import { SocketService } from "./socket.service";
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { Card, CardSchema } from "../cards/schema/card.schema";
     ]),
     CardsModule,
   ],
-  providers: [UsersService],
+  providers: [UsersService, SocketService],
   controllers: [UsersController],
   exports: [UsersService],
 })

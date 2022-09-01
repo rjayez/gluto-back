@@ -8,5 +8,6 @@ import { Serie, SerieSchema } from "./schema/serie.schema";
   imports: [MongooseModule.forFeature([{ name: Serie.name, schema: SerieSchema }])],
   providers: [SeriesService],
   controllers: [SeriesController],
+  exports: [SeriesService],
 })
 export class SeriesModule {}

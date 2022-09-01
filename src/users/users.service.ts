@@ -55,6 +55,7 @@ export class UsersService {
       const userCard = new UserCardDto();
       userCard.name = card.name;
       userCard.description = card.description;
+      // TODO Refacto
       userCard.order = card.order;
       userCard.rarity = card.rarity.name;
       userCard.serie = card.serie.name;
@@ -90,8 +91,6 @@ export class UsersService {
       .populate("cards")
       .then(result => this.buildUpdatedCollection(result.cards, droppedCards));
 
-    console.info("THEN", then);
-
     // Mets à jour MongoDB avec les nouvelles cartes
     return this.userModel
       .updateMany({
@@ -108,11 +107,9 @@ export class UsersService {
 
   // TODO Refacto et simplifier
   buildUpdatedCollection(previousCollection: CollectionCard[], droppedCards: Card[]) {
-    console.info("previousCollection", previousCollection);
     let droppedIds = droppedCards.map(droppedCard => droppedCard._id.toString());
     const collectionCardIds = previousCollection.map(value => value.card._id.toString());
-    console.info("collectionCardIds", collectionCardIds);
-    console.info("droppedIds", droppedIds);
+
     // Mets à jour la collection si doublon sur le tirage
     const collectionCards = previousCollection.map(cardCollection => {
       if (droppedIds.includes(cardCollection.card._id.toString())) {
@@ -125,13 +122,7 @@ export class UsersService {
       .filter(droppedCard => !collectionCardIds.includes(droppedCard._id.toString()))
       .map(value => this.buildCollectionCardModel(value._id));
 
-    console.info("newCards", newCards);
-
-    console.info("Avant collectionCards", collectionCards);
-
     collectionCards.push(...newCards);
-
-    console.info("Apres collectionCards", collectionCards);
 
     return collectionCards;
   }
