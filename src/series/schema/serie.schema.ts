@@ -5,7 +5,6 @@ export type SerieDocument = Serie & Document;
 
 @Schema()
 export class Serie {
-  @Prop()
   _id: string;
 
   @Prop()

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/common";
 import { SeriesService } from "./series.service";
 import { CreateSerieDto } from "./dto/create-serie.dto";
 import { UpdateSerieDto } from "./dto/update-serie.dto";
@@ -13,7 +13,10 @@ export class SeriesController {
   }
 
   @Get()
-  findAll() {
+  findAll(@Query("enabled") enabled: string) {
+    if (enabled === "true") {
+      return this.seriesService.findEnabledSerie();
+    }
     return this.seriesService.findAll();
   }
 
