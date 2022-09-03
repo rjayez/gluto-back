@@ -35,7 +35,7 @@ export class EventSubController {
 
       switch (type) {
         case SUBSCRIPTION_TYPE.FOLLOW:
-          await this.eventSubService.eventChannelFollow(event);
+          // await this.eventSubService.eventChannelFollow(event);
           break;
         case SUBSCRIPTION_TYPE.STREAM_UP:
           await this.eventSubService.eventStreamUp();
