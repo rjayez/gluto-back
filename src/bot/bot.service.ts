@@ -11,11 +11,14 @@ export class BotService implements OnModuleInit {
     "!bug",
     "!cri",
     "!dé",
+    "!dance",
+    "!site",
+    "!planning",
     "!chaise",
     "!banc",
     "!fada",
     "!romanusdodo",
-    // "!zireael",
+    "!tchoutchou",
     "!romanus",
     "!nik",
     "!frites",
@@ -24,11 +27,13 @@ export class BotService implements OnModuleInit {
     "!idiot",
     "!qi",
     "!age",
-    "!bisou",
+    "!bisous",
     "!chaussons",
+    "!sandrine",
+    "!pelle",
   ];
 
-  private readonly _30_MINUTES_IN_MS = 1000 * 60 * 30;
+  private readonly _30_MINUTES_IN_MS = 30 * 60 * 1000;
 
   constructor(@Inject("CHAT_CLIENT") private chatClient: ChatClient) {}
 
@@ -40,6 +45,29 @@ export class BotService implements OnModuleInit {
     this.chatClient.onMessage(async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
       if (process.env.EN_DEV) {
         // return;
+      }
+
+      if (msg.userInfo.isMod && message.toLowerCase() === "!revolution") {
+        await this.chatClient.enableFollowersOnly(channel, 0);
+        await this.chatClient.enableEmoteOnly(channel);
+        await this.chatClient.enableSubsOnly(channel);
+        await this.chatClient.enableSlow(channel, 1800);
+        await this.chatClient.say(
+          channel,
+          "Dû à une non rémunération de la modération, une révolution est en cours. Veuillez nous excuser de ces désagréments, mais VIVA LA REVOLUCION ! #MoDons"
+        );
+      }
+
+      if (!msg.userInfo.isMod && message.toLowerCase() === "!revolution") {
+        await this.chatClient.say(channel, "Non, toi, tu n'as pas le droit, c'est reservé aux modos !");
+      }
+
+      if ((msg.userInfo.isMod || msg.userInfo.isBroadcaster) && message.toLowerCase() === "!dissolution") {
+        await this.chatClient.disableFollowersOnly(channel);
+        await this.chatClient.disableEmoteOnly(channel);
+        await this.chatClient.disableSubsOnly(channel);
+        await this.chatClient.disableSlow(channel);
+        await this.chatClient.say(channel, "Nous mettons la révolution en pause... mais attention ! #MoDons");
       }
 
       if (["!cmd", "!commande", "!commandes"].includes(message.toLowerCase())) {
@@ -148,9 +176,9 @@ export class BotService implements OnModuleInit {
         await this.chatClient.say(channel, "J'ai pas assez dormi !");
       }
 
-      if (message.toLowerCase() === "!zireael") {
-        await this.chatClient.say(channel, "Nik toi Zireael !");
-      }
+      // if (message.toLowerCase() === "!zireael") {
+      //   await this.chatClient.say(channel, "Nik toi Zireael !");
+      // }
 
       if (message.toLowerCase() === "!romanus") {
         await this.chatClient.say(channel, "Pas touche à Romanus !");

@@ -1,23 +1,32 @@
-import { AuthService } from "../auth/auth.service";
 import { ChatClient } from "@twurple/chat";
 import { Module } from "@nestjs/common";
+import { AuthModule } from "../auth/auth.module";
+import { RefreshingAuthProvider } from "@twurple/auth";
 
 const chatClientFactory = {
   provide: "CHAT_CLIENT",
-  useFactory: async (authService: AuthService) => {
-    const staticAuthProvider = authService.getStaticAuthProvider();
-    const chatClient1 = new ChatClient({ authProvider: staticAuthProvider, channels: ["letetryl", "romanus89"] });
-    await chatClient1.connect();
-    chatClient1.onConnect(async () => {
-      await chatClient1.say("#letetryl", "[TEST] Je me réveille *baille*");
+  useFactory: async (refreshingAuthProvider: RefreshingAuthProvider) => {
+    const chatClient = new ChatClient({
+      authProvider: refreshingAuthProvider,
+      channels: ["letetryl", "romanus89"],
+      logger: {
+        minLevel: "WARNING",
+      },
+      botLevel: "verified",
+      isAlwaysMod: true,
     });
-    return chatClient1;
+    await chatClient.connect();
+    chatClient.onConnect(async () => {
+      await chatClient.say("#romanus89", "[TEST] Je me réveille *baille*");
+    });
+    return chatClient;
   },
-  inject: [AuthService],
+  inject: ["REFRESH_AUTH_PROVIDER"],
 };
 
 @Module({
-  providers: [AuthService, chatClientFactory],
+  imports: [AuthModule],
+  providers: [chatClientFactory],
   exports: ["CHAT_CLIENT"],
 })
 export class ChatClientModule {}

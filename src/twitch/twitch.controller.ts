@@ -1,22 +1,18 @@
-import { Controller, Get, OnModuleInit } from "@nestjs/common";
+import { Controller, Get, Inject, OnModuleInit } from "@nestjs/common";
 import { TwitchService } from "./twitch.service";
 import { StreamDto } from "./dto/stream.dto";
 import { LE_TETRYL_ID } from "../constants";
 import { ChatClient } from "@twurple/chat";
 import { AuthService } from "../auth/auth.service";
+import { StaticAuthProvider } from "@twurple/auth";
 
 @Controller("/twitch")
 export class TwitchController implements OnModuleInit {
   chatClient: ChatClient;
 
-  constructor(private readonly twitchService: TwitchService, private readonly authService: AuthService) {
-    const staticAuthProvider = this.authService.getStaticAuthProvider();
-    this.chatClient = new ChatClient({ authProvider: staticAuthProvider, channels: ["letetryl", "romanus89"] });
-  }
+  constructor(private readonly twitchService: TwitchService) {}
 
-  async onModuleInit() {
-    await this.chatClient.connect();
-  }
+  async onModuleInit() {}
 
   @Get("/schedule")
   getWeekSchedule(): StreamDto[] {

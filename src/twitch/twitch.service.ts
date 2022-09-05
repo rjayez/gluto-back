@@ -2,7 +2,6 @@ import { Injectable } from "@nestjs/common";
 import axios from "axios";
 import { DateTime } from "luxon";
 import { StreamDto } from "./dto/stream.dto";
-import { sha256 } from "js-sha256";
 
 @Injectable()
 export class TwitchService {
@@ -15,6 +14,7 @@ export class TwitchService {
   private gamePictureCache: object = {};
   private readonly TWITCH_BASE_URL = "https://api.twitch.tv/helix";
 
+  // TODO Refacto avec @Twurple/api et remplacer les appels Axios
   getWeekSchedule(id: number): any {
     const nbElement = 7;
     const monday = DateTime.now().startOf("week");

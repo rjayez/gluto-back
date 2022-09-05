@@ -1,6 +1,8 @@
 import { Module } from "@nestjs/common";
+import { AccessToken, RefreshingAuthProvider, StaticAuthProvider } from "@twurple/auth";
+import { ConfigurationModule } from "../configuration/configuration.module";
 import { AuthService } from "./auth.service";
-import { StaticAuthProvider } from "@twurple/auth";
+import { ConfigurationsService } from "../configuration/configurations.service";
 
 const staticAuthProviderFactory = {
   provide: "STATIC_AUTH_PROVIDER",
@@ -11,10 +13,26 @@ const staticAuthProviderFactory = {
   },
 };
 
+const refreshingAuthProviderFactory = {
+  provide: "REFRESH_AUTH_PROVIDER",
+  useFactory: async (configurationService: ConfigurationsService) => {
+    const actuelAccessToken: AccessToken = await configurationService.getTokenFromConfiguration();
+    return new RefreshingAuthProvider(
+      {
+        clientId: process.env.CLIENT_ID,
+        clientSecret: process.env.CLIENT_SECRET,
+        onRefresh: async (accessToken: AccessToken) => await configurationService.updateToken(accessToken),
+      },
+      actuelAccessToken
+    );
+  },
+  inject: [ConfigurationsService],
+};
+
 @Module({
-  imports: [],
+  imports: [ConfigurationModule],
   controllers: [],
-  providers: [AuthService, staticAuthProviderFactory],
-  exports: ["STATIC_AUTH_PROVIDER"],
+  providers: [AuthService, staticAuthProviderFactory, refreshingAuthProviderFactory],
+  exports: [AuthService, "STATIC_AUTH_PROVIDER", "REFRESH_AUTH_PROVIDER"],
 })
 export class AuthModule {}
