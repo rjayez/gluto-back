@@ -12,7 +12,7 @@ const chatClientFactory = {
       logger: {
         minLevel: "WARNING",
       },
-      botLevel: "verified",
+      botLevel: "none",
       isAlwaysMod: true,
     });
     await chatClient.connect();
