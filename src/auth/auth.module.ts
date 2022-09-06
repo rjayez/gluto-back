@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { AccessToken, RefreshingAuthProvider, StaticAuthProvider } from "@twurple/auth";
-import { ConfigurationModule } from "../configuration/configuration.module";
+import { ConfigurationsModule } from "../configuration/configurationsModule";
 import { AuthService } from "./auth.service";
 import { ConfigurationsService } from "../configuration/configurations.service";
 
@@ -30,7 +30,7 @@ const refreshingAuthProviderFactory = {
 };
 
 @Module({
-  imports: [ConfigurationModule],
+  imports: [ConfigurationsModule],
   controllers: [],
   providers: [AuthService, staticAuthProviderFactory, refreshingAuthProviderFactory],
   exports: [AuthService, "STATIC_AUTH_PROVIDER", "REFRESH_AUTH_PROVIDER"],

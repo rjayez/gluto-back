@@ -1,10 +1,14 @@
 import { Controller, ForbiddenException, HttpStatus, Post, Req } from "@nestjs/common";
 import { EventSubService } from "./event-sub.service";
 import { STATUS, SUBSCRIPTION_TYPE, TEST_REWARD_ID } from "./constants";
+import { ConfigurationsService } from "../configuration/configurations.service";
 
 @Controller("event-sub")
 export class EventSubController {
-  constructor(private readonly eventSubService: EventSubService) {}
+  constructor(
+    private readonly eventSubService: EventSubService,
+    private readonly configurationService: ConfigurationsService
+  ) {}
 
   private static readonly MESSAGE_TYPE_VERIFICATION = "webhook_callback_verification_pending";
   // TODO Decorator pour extraire les objets subscription
@@ -12,15 +16,13 @@ export class EventSubController {
   async subcribe(@Req() req) {
     // Vérifie que le message provient bien de Twitch avec le bon secret
     if (!this.eventSubService.verifyTwitchSubSignature(req.headers, req.body)) {
-      console.log("Rejeté");
+      console.warn("Rejeté");
       throw new ForbiddenException();
     }
 
     let subscription = req.body.subscription;
-    console.info("subscription", subscription);
 
     const { status, type } = subscription;
-    console.debug("status", status);
 
     // Vérification d'une subscription d'event twitch
     if (status === EventSubController.MESSAGE_TYPE_VERIFICATION) {
@@ -28,10 +30,9 @@ export class EventSubController {
       console.log("Verification pending");
       return req.body.challenge;
     }
-
-    if (subscription.status === STATUS.ENABLED) {
+    const eventSubEnabled = this.configurationService.eventSubEnabled;
+    if (eventSubEnabled && subscription.status === STATUS.ENABLED) {
       let event = req.body.event;
-      console.debug("event", event);
 
       switch (type) {
         case SUBSCRIPTION_TYPE.FOLLOW:

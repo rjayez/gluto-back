@@ -2,6 +2,7 @@ import { Inject, Injectable, OnModuleInit } from "@nestjs/common";
 import { ChatClient } from "@twurple/chat";
 import { TwitchPrivateMessage } from "@twurple/chat/lib/commands/TwitchPrivateMessage";
 import { getAge, getQI, getRandomNumber } from "../utils/utils";
+import { ConfigurationsService } from "../configuration/configurations.service";
 
 @Injectable()
 export class BotService implements OnModuleInit {
@@ -35,7 +36,10 @@ export class BotService implements OnModuleInit {
 
   private readonly _30_MINUTES_IN_MS = 30 * 60 * 1000;
 
-  constructor(@Inject("CHAT_CLIENT") private chatClient: ChatClient) {}
+  constructor(
+    @Inject("CHAT_CLIENT") private chatClient: ChatClient,
+    private readonly configurationService: ConfigurationsService
+  ) {}
 
   async postMessage(msg: string) {
     await this.chatClient.say("#letetryl", msg).catch(err => console.error(err));
@@ -43,8 +47,34 @@ export class BotService implements OnModuleInit {
 
   async onModuleInit(): Promise<any> {
     this.chatClient.onMessage(async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
+      if ((msg.userInfo.isMod || msg.userInfo.isBroadcaster) && message.toLowerCase() === "!onoffcmd") {
+        if (this.configurationService.botCommandEnabled) {
+          this.configurationService.botCommandEnabled = false;
+          await this.chatClient.say(
+            channel,
+            "Pour les biens de la modérations, les commandes sont désactivés temporairement. Merci de votre compréhension letetrComfy"
+          );
+        } else {
+          this.configurationService.botCommandEnabled = true;
+          await this.chatClient.say(channel, "Les commandes sont de nouveaux disponibles letetrDanse letetrDanse");
+        }
+      }
+
+      if ((msg.userInfo.isMod || msg.userInfo.isBroadcaster) && message.toLowerCase() === "!onoffnotif") {
+        if (this.configurationService.eventSubEnabled) {
+          this.configurationService.eventSubEnabled = false;
+          await this.chatClient.say(
+            channel,
+            "Pour les biens de la modérations, les notifications de type follow/sub/raid sont désactivés temporairement. Merci de votre compréhension letetrComfy"
+          );
+        } else {
+          this.configurationService.eventSubEnabled = true;
+          await this.chatClient.say(channel, "Les notifications sont de nouveaux disponibles letetrDanse letetrDanse");
+        }
+      }
+
       if (process.env.EN_DEV) {
-        // return;
+        return;
       }
 
       if (msg.userInfo.isMod && message.toLowerCase() === "!revolution") {
@@ -68,6 +98,14 @@ export class BotService implements OnModuleInit {
         await this.chatClient.disableSubsOnly(channel);
         await this.chatClient.disableSlow(channel);
         await this.chatClient.say(channel, "Nous mettons la révolution en pause... mais attention ! #MoDons");
+      }
+
+      /************
+       * Début commande public
+       **********/
+      // TODO Découper code public ailleurs
+      if (!this.configurationService.botCommandEnabled) {
+        return;
       }
 
       if (["!cmd", "!commande", "!commandes"].includes(message.toLowerCase())) {
@@ -223,8 +261,20 @@ export class BotService implements OnModuleInit {
         await this.chatClient.say(channel, `${user}, tu as ${getAge()}`);
       }
 
-      if (message.toLowerCase() === "!bisou" || message.toLowerCase() === "!bisous") {
-        await this.chatClient.say(channel, "<3 ❤️ 🧡 💛 💚 💙 💜 🤎 🖤 🤍 ❤️ <3 🧡 💛 💚 💙 💜 🤎 🖤 🤍 <3");
+      if (message.toLowerCase().startsWith("!bisous")) {
+        const split = message.split("!bisous");
+        const messageArg = split[1].trim();
+        await this.chatClient.say(
+          channel,
+          `<3 ❤️ 🧡 💛 💚 💙 💜 🤎 🖤 🤍 ❤️ <3 🧡 💛 💚 💙 💜 🤎 🖤 🤍 <3 ${messageArg}`
+        );
+      } else if (message.toLowerCase().startsWith("!bisou")) {
+        const split = message.split("!bisou");
+        const messageArg = split[1].trim();
+        await this.chatClient.say(
+          channel,
+          `<3 ❤️ 🧡 💛 💚 💙 💜 🤎 🖤 🤍 ❤️ <3 🧡 💛 💚 💙 💜 🤎 🖤 🤍 <3 ${messageArg}`
+        );
       }
 
       if (message.toLowerCase() === "!site") {

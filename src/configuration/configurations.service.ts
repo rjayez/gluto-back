@@ -8,7 +8,24 @@ import { AccessToken } from "@twurple/auth";
 
 @Injectable()
 export class ConfigurationsService {
+  get eventSubEnabled(): boolean {
+    return this._eventSubEnabled;
+  }
+
+  set eventSubEnabled(value: boolean) {
+    this._eventSubEnabled = value;
+  }
+  get botCommandEnabled(): boolean {
+    return this._botCommandEnabled;
+  }
+
+  set botCommandEnabled(value: boolean) {
+    this._botCommandEnabled = value;
+  }
   private readonly CONFIGURATION_NAME = "PRINCIPALE";
+  // Boolean d'activation pour tous les messages d'evennement du tchat twitch
+  private _eventSubEnabled = true;
+  private _botCommandEnabled = true;
 
   constructor(@InjectModel(Configurations.name) private configurationModel: Model<ConfigurationsDocument>) {}
 

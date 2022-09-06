@@ -6,7 +6,7 @@ import { TwitchModule } from "./twitch/twitch.module";
 import { ConfigModule } from "@nestjs/config";
 import { MongooseModule } from "@nestjs/mongoose";
 import { AuthModule } from "./auth/auth.module";
-import { ConfigurationModule } from "./configuration/configuration.module";
+import { ConfigurationsModule } from "./configuration/configurationsModule";
 import { BotModule } from "./bot/bot.module";
 import { EventSubModule } from "./event-sub/event-sub.module";
 
@@ -19,7 +19,7 @@ import { EventSubModule } from "./event-sub/event-sub.module";
     MongooseModule.forRoot(
       `mongodb+srv://${process.env.MONGODB_LOGIN}:${process.env.MONGODB_PWD}@cluster0.jvbmq.mongodb.net/glutoDB`
     ),
-    ConfigurationModule,
+    ConfigurationsModule,
     AuthModule,
     CardsModule,
     TwitchModule,
