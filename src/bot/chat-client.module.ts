@@ -10,7 +10,7 @@ const chatClientFactory = {
       authProvider: refreshingAuthProvider,
       channels: ["letetryl", "romanus89"],
       logger: {
-        minLevel: "WARNING",
+        minLevel: "DEBUG",
       },
       botLevel: "none",
       isAlwaysMod: true,

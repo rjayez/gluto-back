@@ -88,6 +88,10 @@ export class BotService implements OnModuleInit {
         console.log("tags", user);
       }
 
+      if (message.toLowerCase() === "!photo") {
+        await this.chatClient.say(channel, "Moins de tourisme et ➕ de massacre STP letetrHollowGun letetrHollowGun");
+      }
+
       if (message.toLowerCase() === "!sandrine") {
         await this.chatClient.say(
           channel,
