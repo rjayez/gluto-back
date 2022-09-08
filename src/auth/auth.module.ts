@@ -8,7 +8,7 @@ const staticAuthProviderFactory = {
   provide: "STATIC_AUTH_PROVIDER",
   useFactory: () => {
     const clientId = process.env.CLIENT_ID;
-    const botToken = process.env.BOT_OAUTH_TOKEN;
+    const botToken = process.env.TWITCH_API_TOKEN;
     return new StaticAuthProvider(clientId, botToken);
   },
 };
