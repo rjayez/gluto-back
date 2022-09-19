@@ -116,6 +116,22 @@ export class BotCommandPublicService implements OnModuleInit {
         }
       }
 
+      if (message.toLowerCase().startsWith("!narasoin")) {
+        const split = message.split("!narasoin");
+        const messageArg = split[1].trim();
+        if (messageArg === "") {
+          await this.chatClient.say(
+            channel,
+            `/me Envoie une potion de soin au pif, qui redonne ${getRandomNumber(0, 250)}% de ses PV !`
+          );
+        } else {
+          await this.chatClient.say(
+            channel,
+            `/me Envoie une potion de soin sur ${messageArg}, qui a repris ${getRandomNumber(0, 250)}% de ses PV !`
+          );
+        }
+      }
+
       if (["!sncf", "!tchoutchou"].includes(message.toLowerCase())) {
         await this.chatClient.say(channel, "letetrAAAH TCHOUTCHOUUUU letetrAAAH");
       }

@@ -61,7 +61,12 @@ export class BotCommandModoService implements OnModuleInit {
         await this.chatClient.say(channel, "Non, toi, tu n'as pas le droit, c'est reservé aux modos !");
       }
 
-      if ((msg.userInfo.isMod || msg.userInfo.isBroadcaster) && message.toLowerCase() === "!dissolution") {
+      if (!msg.userInfo.isMod && message.toLowerCase() === "!dissolution") {
+        await this.chatClient.say(channel, "Non, toi, tu n'as pas le droit, c'est reservé aux modos !");
+      }
+
+      // if ((msg.userInfo.isMod || msg.userInfo.isBroadcaster) && message.toLowerCase() === "!dissolution") {
+      if (msg.userInfo.isMod && message.toLowerCase() === "!dissolution") {
         await this.chatClient.disableFollowersOnly(channel);
         await this.chatClient.disableEmoteOnly(channel);
         await this.chatClient.disableSubsOnly(channel);
