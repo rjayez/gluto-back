@@ -74,9 +74,5 @@ export class BotCommandModoService implements OnModuleInit {
         await this.chatClient.say(channel, "Nous mettons la révolution en pause... mais attention ! #MoDons");
       }
     });
-
-    this.chatClient.onSub(async (channel, user, subInfo, msg) => {
-      await this.chatClient.say(channel, `letetrAAAH letetrAAAH Merci ${user} pour le sub letetrAAAH letetrAAAH`);
-    });
   }
 }
