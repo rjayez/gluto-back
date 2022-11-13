@@ -6,5 +6,6 @@ import { TwitchService } from "./twitch.service";
   imports: [],
   controllers: [TwitchController],
   providers: [TwitchService],
+  exports: [TwitchService],
 })
 export class TwitchModule {}

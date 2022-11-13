@@ -5,9 +5,10 @@ import { ChatClientModule } from "./chat-client.module";
 import { ConfigurationsModule } from "../configuration/configurationsModule";
 import { BotCommandPublicService } from "./botCommandPublic.service";
 import { BotCommandIntervalService } from "./botCommandInterval.service";
+import { TwitchModule } from "../twitch/twitch.module";
 
 @Module({
-  imports: [ChatClientModule, ConfigurationsModule],
+  imports: [ChatClientModule, ConfigurationsModule, TwitchModule],
   controllers: [BotController],
   providers: [BotCommandModoService, BotCommandPublicService, BotCommandIntervalService],
 })

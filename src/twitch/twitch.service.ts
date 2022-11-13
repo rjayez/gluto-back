@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import axios from "axios";
 import { DateTime } from "luxon";
 import { StreamDto } from "./dto/stream.dto";
+import { LE_TETRYL_ID } from "../constants";
 
 @Injectable()
 export class TwitchService {
@@ -77,7 +78,7 @@ export class TwitchService {
 
     const url = `${this.TWITCH_BASE_URL}/games?id=${gameId}`;
     return axios.get(url, { headers: this.HEADERS }).then(res => {
-      let boxArtUrl = res.data?.data[0]?.box_art_url || "";
+      const boxArtUrl = res.data?.data[0]?.box_art_url || "";
       this.gamePictureCache[gameId] = boxArtUrl;
       return boxArtUrl;
     });
@@ -94,12 +95,14 @@ export class TwitchService {
     };
   }
 
-  getStreamPresent(id: number) {
+  tetrylIsLive(): Promise<boolean> {
+    return this.getStreamPresent(LE_TETRYL_ID);
+  }
+
+  getStreamPresent(id: number): Promise<boolean> {
     const url = `${this.TWITCH_BASE_URL}/streams?user_id=${id}`;
     return axios.get(url, { headers: this.HEADERS }).then(response => {
-      return {
-        isLive: response.data?.data?.length > 0,
-      };
+      return response.data?.data?.length > 0;
     });
   }
 }

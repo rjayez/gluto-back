@@ -1,10 +1,8 @@
-import { Controller, Get, Inject, OnModuleInit } from "@nestjs/common";
+import { Controller, Get, OnModuleInit } from "@nestjs/common";
 import { TwitchService } from "./twitch.service";
 import { StreamDto } from "./dto/stream.dto";
 import { LE_TETRYL_ID } from "../constants";
 import { ChatClient } from "@twurple/chat";
-import { AuthService } from "../auth/auth.service";
-import { StaticAuthProvider } from "@twurple/auth";
 
 @Controller("/twitch")
 export class TwitchController implements OnModuleInit {
@@ -21,7 +19,9 @@ export class TwitchController implements OnModuleInit {
 
   @Get("stream")
   GetStreamOnline() {
-    return this.twitchService.getStreamPresent(LE_TETRYL_ID);
+    return this.twitchService.getStreamPresent(LE_TETRYL_ID).then(streamPresent => ({
+      isLive: streamPresent,
+    }));
   }
 
   @Get("/notif")
