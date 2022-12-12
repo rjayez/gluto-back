@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
-import { Strategy } from "passport-twitch-latest";
+import { AuthenticateOptions, Strategy, TwitchProfile } from "passport-twitch-latest";
 import { AuthService } from "./auth.service";
 
 @Injectable()
@@ -16,6 +16,16 @@ export class TwitchStrategy extends PassportStrategy(Strategy) {
       passReqToCallback: true,
       proxy: true,
     });
+  }
+
+  authenticate(req: any, options?: AuthenticateOptions) {
+    console.debug("authenticate" + req);
+    super.authenticate(req, options);
+  }
+
+  userProfile(accessToken: string, done: (err?: Error | null, profile?: TwitchProfile) => void) {
+    console.debug("userProfile" + accessToken);
+    super.userProfile(accessToken, done);
   }
 
   /**
