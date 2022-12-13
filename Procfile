@@ -1,1 +1,1 @@
-web: npm run start:login
+web: node express/app.js
