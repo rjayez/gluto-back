@@ -6,7 +6,7 @@ let logger = require("morgan");
 // let bot = require("./bot/bot");
 let helmet = require("helmet");
 const cors = require("cors");
-let env = require("dotenv").config();
+require("dotenv").config();
 const { CORS_OPTIONS } = require("./constants");
 
 let indexRouter = require("./routes/index");
@@ -60,9 +60,9 @@ passport.use(
     },
     function (accessToken, refreshToken, profile, done) {
       // Suppose we are using mongo..
-      console.debug(accessToken);
-      console.debug(refreshToken);
-      console.debug(profile);
+      console.info({ accessToken });
+      console.info({ refreshToken });
+      console.info({ profile });
 
       return done(null, null);
 
@@ -81,11 +81,36 @@ passport.deserializeUser(function (user, done) {
   done(null, user);
 });
 
-app.get("/auth/twitch", passport.authenticate("twitchStrategy"));
-app.get("/auth/redirect", passport.authenticate("twitchStrategy", { failureRedirect: "/" }), function (req, res) {
-  // Successful authentication, redirect home.
-  res.redirect("/");
+app.get("/auth/twitch", function (req, res, next) {
+  passport.authenticate("twitchStrategy", {}, function (error, user, info) {
+    console.info({ error });
+    console.info({ user });
+    console.info({ info });
+
+    if (error) {
+      res.status(401).send(error);
+    } else if (!user) {
+      res.status(401).send(info);
+    } else {
+      next();
+    }
+
+    res.status(401).send(info);
+  })(req, res);
 });
+
+app.get(
+  "/auth/redirect",
+  passport.authenticate("twitchStrategy", { failureRedirect: "/" }, function (error, user, info) {
+    console.info({ error });
+    console.info({ user });
+    console.info({ info });
+  }),
+  function (req, res) {
+    // Successful authentication, redirect home.
+    res.redirect("/");
+  }
+);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
