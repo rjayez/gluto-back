@@ -2,6 +2,8 @@ let createError = require("http-errors");
 let express = require("express");
 let path = require("path");
 let cookieParser = require("cookie-parser");
+let cookieSession = require("cookie-session");
+let bodyParser = require("body-parser");
 let logger = require("morgan");
 // let bot = require("./bot/bot");
 let helmet = require("helmet");
@@ -19,12 +21,16 @@ let app = express();
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "jade");
 
+// Middlewares
 app.use(logger("dev"));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(cookieSession({ secret: "coucou" }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
-app.use(helmet());
+// app.use(express.static("./public"));
+// app.use(helmet());
 
 app.use(cors(CORS_OPTIONS));
 app.use("/", indexRouter);
@@ -43,10 +49,23 @@ app.use(function (err, req, res, next) {
 });
 
 let passport = require("passport");
+const session = require("express-session");
 let twitchStrategy = require("passport-twitch-latest").Strategy;
 // let { UsersService } = require("../src/users/users.service");
 
 app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(
+  session({
+    secret: "keyboard cat",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true },
+  })
+);
+
+app.set("trust proxy", 1); // trust first proxy
 
 passport.use(
   "twitchStrategy",
@@ -56,7 +75,7 @@ passport.use(
       clientSecret: process.env.CLIENT_SECRET,
       // callbackURL: encodeURI("http://localhost:5000/auth/redirect"),
       callbackURL: encodeURI("https://gluto-back-staging.herokuapp.com/auth/redirect"),
-      scope: "user_read",
+      scope: "",
     },
     function (accessToken, refreshToken, profile, done) {
       // Suppose we are using mongo..
@@ -64,7 +83,7 @@ passport.use(
       console.info({ refreshToken });
       console.info({ profile });
 
-      return done(null, null);
+      return done(null, { twitchId: 1 });
 
       // UsersService.findOrCreate({ twitchId: profile.id }, function (err, user) {
       //   return done(err, user);
@@ -74,43 +93,31 @@ passport.use(
 );
 
 passport.serializeUser(function (user, done) {
+  console.info("serialize");
   done(null, user);
 });
 
 passport.deserializeUser(function (user, done) {
+  console.info("deserialize");
   done(null, user);
 });
 
-app.get("/auth/twitch", function (req, res, next) {
-  passport.authenticate("twitchStrategy", {}, function (error, user, info) {
-    console.info({ error });
-    console.info({ user });
-    console.info({ info });
-
-    if (error) {
-      res.status(401).send(error);
-    } else if (!user) {
-      res.status(401).send(info);
-    } else {
-      next();
-    }
-
-    res.status(401).send(info);
-  })(req, res);
+app.get("/", function (req, res) {
+  res.render("index");
 });
 
 app.get(
-  "/auth/redirect",
-  passport.authenticate("twitchStrategy", { failureRedirect: "/" }, function (error, user, info) {
+  "/auth/twitch",
+  passport.authenticate("twitchStrategy", {}, function (error, user, info) {
     console.info({ error });
-    console.info({ user });
+    console.info({ user1: user });
     console.info({ info });
-  }),
-  function (req, res) {
-    // Successful authentication, redirect home.
-    res.redirect("/");
-  }
+  })
 );
+
+app.get("/auth/redirect", passport.authenticate("twitchStrategy", { failureRedirect: "/" }), function (req, res) {
+  res.redirect("/");
+});
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
