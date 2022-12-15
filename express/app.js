@@ -30,7 +30,7 @@ app.use(cookieSession({ secret: "coucou" }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 // app.use(express.static("./public"));
-// app.use(helmet());
+app.use(helmet());
 
 app.use(cors(CORS_OPTIONS));
 app.use("/", indexRouter);
@@ -73,8 +73,8 @@ passport.use(
     {
       clientID: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
-      // callbackURL: encodeURI("http://localhost:5000/auth/redirect"),
-      callbackURL: encodeURI("https://gluto-back-staging.herokuapp.com/auth/redirect"),
+      callbackURL: encodeURI("http://localhost:5000/auth/redirect"),
+      // callbackURL: encodeURI("https://gluto-back-staging.herokuapp.com/auth/redirect"),
       scope: "",
     },
     function (accessToken, refreshToken, profile, done) {
@@ -115,9 +115,44 @@ app.get(
   })
 );
 
-app.get("/auth/redirect", passport.authenticate("twitchStrategy", { failureRedirect: "/" }), function (req, res) {
-  res.redirect("/");
-});
+// app.get(
+//   "/auth/redirect",
+//   passport.authenticate("twitchStrategy", { failureRedirect: "/" }, function (user, info, user) {}),
+// function(req, res) {
+//   res.redirect("/");
+// }
+
+// );
+
+// if a user is logged in, send him back a message
+app.get(
+  "/auth/redirect",
+  // wrap passport.authenticate call in a middleware function
+  function (req, res, next) {
+    // call passport authentication passing the "local" strategy name and a callback function
+    passport.authenticate("twitchStrategy", { failureRedirect: "/" }, function (error, user, info) {
+      // this will execute in any case, even if a passport strategy will find an error
+      // log everything to console
+      console.log({ error });
+      console.log({ user });
+      console.log({ info });
+
+      // if (error) {
+      //   res.status(401).send(error);
+      // } else if (!user) {
+      //   res.status(401).send(info);
+      // } else {
+      //   next();
+      // }
+      //
+      // res.status(401).send(info);
+      next();
+    })(req, res);
+  },
+  function (req, res) {
+    res.redirect("/");
+  }
+);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
