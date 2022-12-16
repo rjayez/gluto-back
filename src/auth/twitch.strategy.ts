@@ -17,15 +17,18 @@ export class TwitchStrategy extends PassportStrategy(Strategy, "twitch") {
     });
   }
 
-  authenticate(req: any, options?: AuthenticateOptions) {
-    console.debug("authenticate" + req);
-    super.authenticate(req, options);
-  }
-
-  userProfile(accessToken: string, done: (err?: Error | null, profile?: TwitchProfile) => void) {
-    console.debug("userProfile " + accessToken);
-    super.userProfile(accessToken, done);
-  }
+  // authenticate(req: any, options?: AuthenticateOptions) {
+  //   console.debug("authenticate" + req);
+  //   super.authenticate(req, options);
+  // }
+  //
+  // userProfile(accessToken: string, done: (err?: Error | null, profile?: TwitchProfile) => void) {
+  //   console.debug("userProfile " + accessToken);
+  //   console.debug({accessToken});
+  //   console.debug({ "profile" : done })
+  //
+  //   super.userProfile(accessToken, done);
+  // }
 
   /**
    *
