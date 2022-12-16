@@ -51,7 +51,7 @@ export class TwitchStrategy extends PassportStrategy(Strategy, "twitch") {
     console.debug("origin", profile);
 
     try {
-      const user = { accessToken };
+      const user = { accessToken, refreshToken, profile };
       console.debug("USER", profile);
       console.debug("SUER USER", user);
       done(null, user);
