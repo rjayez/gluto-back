@@ -17,11 +17,11 @@ export class AuthController {
 
   @UseGuards(TwitchAuthGuard)
   @Get("/redirect")
-  redirect(@Request() req, @Res() response) {
-    // console.info("redirect", req.user);
-    console.info("response", response.user);
+  redirect(@Request() req) {
+    console.info("redirect", req.user);
+
     const { id, login } = req.user.profile;
-    //
+
     return this.authService.createOrFindUser(id, login);
   }
 
