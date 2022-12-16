@@ -23,7 +23,7 @@ export class TwitchStrategy extends PassportStrategy(Strategy, "twitch") {
   }
 
   userProfile(accessToken: string, done: (err?: Error | null, profile?: TwitchProfile) => void) {
-    console.debug("userProfile" + accessToken);
+    console.debug("userProfile " + accessToken);
     super.userProfile(accessToken, done);
   }
 
@@ -42,7 +42,7 @@ export class TwitchStrategy extends PassportStrategy(Strategy, "twitch") {
     profile: any,
     done: (err, user) => void
   ) {
-    console.debug("origin", originalRequest);
+    // console.debug("origin", originalRequest);
     console.debug("origin", accessToken);
     console.debug("origin", refreshToken);
     console.debug("origin", profile);

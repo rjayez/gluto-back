@@ -19,9 +19,9 @@ export class AuthController {
   @Get("/redirect")
   redirect(@Request() req) {
     console.info("redirect", req.user);
-    const { id, login } = req.user.profile;
+    // const { id, login } = req.user;
 
-    return this.authService.createOrFindUser(id, login);
+    // return this.authService.createOrFindUser(id, login);
   }
 
   // TODO Gérer le fail de redirect (https://www.passportjs.org/packages/passport-twitch/)
