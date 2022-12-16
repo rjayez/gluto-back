@@ -18,11 +18,11 @@ export class AuthController {
   @UseGuards(TwitchAuthGuard)
   @Get("/redirect")
   redirect(@Request() req, @Res() response) {
-    console.info("redirect", req.user);
-    console.info("response", response);
-    // const { id, login } = req.user;
-
-    // return this.authService.createOrFindUser(id, login);
+    // console.info("redirect", req.user);
+    console.info("response", response.user);
+    const { id, login } = req.user.profile;
+    //
+    return this.authService.createOrFindUser(id, login);
   }
 
   // TODO Gérer le fail de redirect (https://www.passportjs.org/packages/passport-twitch/)
