@@ -75,7 +75,7 @@ passport.use(
       clientSecret: process.env.CLIENT_SECRET,
       // callbackURL: encodeURI("http://localhost:5000/auth/redirect"),
       callbackURL: encodeURI("https://gluto-back-staging.herokuapp.com/auth/redirect"),
-      scope: "",
+      scope: ["user:read:email"],
     },
     function (accessToken, refreshToken, profile, done) {
       // Suppose we are using mongo..
