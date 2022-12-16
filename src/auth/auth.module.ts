@@ -25,7 +25,7 @@ const clientCredentialsAuthProviderFactory = {
 };
 
 @Module({
-  imports: [PassportModule.register({}), UsersModule],
+  imports: [PassportModule.register({ defaultStrategy: "twitch" }), UsersModule],
   providers: [TwitchStrategy, staticAuthProviderFactory, clientCredentialsAuthProviderFactory, AuthService],
   exports: ["STATIC_AUTH_PROVIDER", "CLIENT_CREDENTIALS_PROVIDER"],
   controllers: [AuthController],

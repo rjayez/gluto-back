@@ -4,7 +4,7 @@ import { AuthenticateOptions, Strategy, TwitchProfile } from "passport-twitch-la
 import { AuthService } from "./auth.service";
 
 @Injectable()
-export class TwitchStrategy extends PassportStrategy(Strategy) {
+export class TwitchStrategy extends PassportStrategy(Strategy, "twitch") {
   constructor() {
     console.debug("ALLO");
     super({
