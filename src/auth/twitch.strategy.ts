@@ -5,7 +5,6 @@ import { Strategy, TwitchProfile } from "passport-twitch-latest";
 @Injectable()
 export class TwitchStrategy extends PassportStrategy(Strategy, "twitch") {
   constructor() {
-    console.debug("ALLO");
     super({
       clientID: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
@@ -32,9 +31,6 @@ export class TwitchStrategy extends PassportStrategy(Strategy, "twitch") {
     profile: TwitchProfile,
     done: (err, user) => void
   ) {
-    // console.debug("origin", originalRequest);
-    // console.debug("origin", accessToken);
-    // console.debug("origin", refreshToken);
     console.debug("origin profile", profile.login);
 
     try {
@@ -46,12 +42,5 @@ export class TwitchStrategy extends PassportStrategy(Strategy, "twitch") {
       console.error("err validate", err);
       done(err, false);
     }
-
-    // return {
-    //   originalRequest,
-    //   accessToken,
-    //   refreshToken,
-    //   profile,
-    // };
   }
 }
