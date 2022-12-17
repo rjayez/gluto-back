@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
-import { AuthenticateOptions, Strategy, TwitchProfile } from "passport-twitch-latest";
+import { Strategy, TwitchProfile } from "passport-twitch-latest";
 
 @Injectable()
 export class TwitchStrategy extends PassportStrategy(Strategy, "twitch") {
@@ -17,19 +17,6 @@ export class TwitchStrategy extends PassportStrategy(Strategy, "twitch") {
     });
   }
 
-  // authenticate(req: any, options?: AuthenticateOptions) {
-  //   console.debug("authenticate" + req);
-  //   super.authenticate(req, options);
-  // }
-  //
-  // userProfile(accessToken: string, done: (err?: Error | null, profile?: TwitchProfile) => void) {
-  //   console.debug("userProfile " + accessToken);
-  //   console.debug({accessToken});
-  //   console.debug({ "profile" : done })
-  //
-  //   super.userProfile(accessToken, done);
-  // }
-
   /**
    *
    * @param originalRequest
@@ -42,18 +29,18 @@ export class TwitchStrategy extends PassportStrategy(Strategy, "twitch") {
     originalRequest: any,
     accessToken: string,
     refreshToken: string,
-    profile: any,
+    profile: TwitchProfile,
     done: (err, user) => void
   ) {
     // console.debug("origin", originalRequest);
-    console.debug("origin", accessToken);
-    console.debug("origin", refreshToken);
-    console.debug("origin", profile);
+    // console.debug("origin", accessToken);
+    // console.debug("origin", refreshToken);
+    console.debug("origin profile", profile.login);
 
     try {
       const user = { accessToken, refreshToken, profile };
-      console.debug("USER", profile);
-      console.debug("SUER USER", user);
+      // console.debug("USER", profile);
+      // console.debug("SUER USER", user);
       done(null, user);
     } catch (err) {
       console.error("err validate", err);
