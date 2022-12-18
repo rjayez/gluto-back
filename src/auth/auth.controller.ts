@@ -18,13 +18,13 @@ export class AuthController {
 
   @UseGuards(TwitchAuthGuard)
   @Get("/redirect")
-  redirect(@Request() req) {
+  async redirect(@Request() req) {
     // console.info("redirect", req.user);
     console.debug("login redirect ", req.user.profile.login);
 
     const { id, login, display_name } = req.user.profile;
 
-    const user = this.authService.createOrFindUser(id, login, display_name);
+    const user = await this.authService.createOrFindUser(id, login, display_name);
     return "Connexion réussi !";
   }
 

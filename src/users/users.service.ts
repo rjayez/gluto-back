@@ -78,12 +78,14 @@ export class UsersService {
     return this.userModel.exists({ id: twitchId }).then(user => user !== null);
   }
 
-  findOrCreate(twitchId: number, username: string, displayName: string) {
-    return this.userModel.findOneAndUpdate(
-      { id: twitchId },
-      { id: twitchId, username: username, displayName: displayName },
-      { upsert: true }
-    );
+  findOrCreate(twitchId: number, username: string, displayName: string): Promise<User> {
+    return this.userModel
+      .findOneAndUpdate(
+        { id: twitchId },
+        { id: twitchId, username: username, displayName: displayName },
+        { upsert: true }
+      )
+      .exec();
   }
 
   async addCardToCollection(userId: string, droppedCards: Card[]): Promise<boolean> {
