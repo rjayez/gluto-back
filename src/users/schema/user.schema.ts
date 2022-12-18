@@ -13,6 +13,9 @@ export class User {
   username: string;
 
   @Prop()
+  displayName: string;
+
+  @Prop()
   cards: CollectionCard[];
 }
 
